@@ -8,16 +8,20 @@ export function getApiBaseUrl() {
 }
 
 export const API_PATHS = {
-  authLogin: process.env.API_AUTH_LOGIN_PATH ?? "/admin/auth/login",
-  authMe: process.env.API_AUTH_ME_PATH ?? "/admin/auth/me",
-  authChangePassword:
-    process.env.API_AUTH_CHANGE_PASSWORD_PATH ?? "/admin/auth/change-password",
+  login: process.env.API_LOGIN_PATH ?? "/admin/login",
+  profile: process.env.API_PROFILE_PATH ?? "/admin/profile",
+  profilePassword: process.env.API_PROFILE_PASSWORD_PATH ?? "/admin/profile/password",
 
   registrations: process.env.API_REGISTRATIONS_PATH ?? "/admin/registrations",
+  registrationStatus:
+    process.env.API_REGISTRATION_STATUS_PATH ?? "/admin/registrations/:id/status",
   contacts: process.env.API_CONTACTS_PATH ?? "/admin/contacts",
+  contactStatus:
+    process.env.API_CONTACT_STATUS_PATH ?? "/admin/contacts/:id/status",
 
   articles: process.env.API_ARTICLES_PATH ?? "/admin/articles",
-  mediaUpload: process.env.API_MEDIA_UPLOAD_PATH ?? "/admin/media",
+  articleEdit: process.env.API_ARTICLE_EDIT_PATH ?? "/admin/articles/:id",
 
   admins: process.env.API_ADMINS_PATH ?? "/admin/admins",
+  adminEdit: process.env.API_ADMIN_EDIT_PATH ?? "/admin/admins/:id",
 };
