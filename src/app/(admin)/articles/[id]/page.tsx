@@ -12,6 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { BlocksEditor, type BlocksEditorHandle } from "@/components/articles/blocks-editor";
 import { getArticle, updateArticle } from "@/lib/api/endpoints";
 import { buildArticleFormData } from "@/lib/articles/formdata";
+import { extractInlineMediaKeys } from "@/lib/articles/pending";
 import type { ArticleDTO, ArticleStatus } from "@/lib/types";
 
 function parseContent(content: unknown): OutputData {
@@ -213,7 +214,17 @@ export default function EditArticlePage() {
               ref={editorRef}
               initialData={content}
               className="min-h-[60vh]"
-              onChange={setContent}
+              onChange={(data) => {
+                setContent(data);
+                const used = new Set(extractInlineMediaKeys(data));
+                setPendingFiles((prev) => {
+                  const next: Record<string, File> = {};
+                  for (const [key, file] of Object.entries(prev)) {
+                    if (used.has(key)) next[key] = file;
+                  }
+                  return next;
+                });
+              }}
               onAddPendingFile={(key, file) =>
                 setPendingFiles((prev) => ({
                   ...prev,

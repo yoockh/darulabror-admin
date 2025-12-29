@@ -54,3 +54,46 @@ dialog::backdrop {
   background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(6px);
 }
+
+/* Editor.js (dark metal) */
+.codex-editor,
+.codex-editor * {
+  color: var(--da-text-primary);
+}
+
+.ce-toolbar__plus,
+.ce-toolbar__settings-btn {
+  background: rgba(229, 231, 235, 0.06) !important;
+  border: 1px solid var(--da-glass-border) !important;
+  color: var(--da-text-primary) !important;
+}
+
+.ce-popover,
+.ce-inline-toolbar,
+.ce-conversion-toolbar {
+  background: var(--da-glass-bg-strong) !important;
+  border: 1px solid var(--da-glass-border) !important;
+  box-shadow: var(--da-glass-shadow) !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+.ce-popover__item:hover,
+.ce-inline-toolbar__dropdown:hover,
+.ce-inline-tool:hover,
+.ce-toolbox__button:hover {
+  background: rgba(229, 231, 235, 0.06) !important;
+}
+
+.ce-popover__item,
+.ce-inline-tool,
+.ce-inline-toolbar__dropdown {
+  color: var(--da-text-primary) !important;
+}
+
+.ce-popover__item-icon,
+.ce-inline-tool svg,
+.ce-toolbar__settings-btn svg,
+.ce-toolbar__plus svg {
+  color: var(--da-text-primary) !important;
+  fill: currentColor !important;
+}

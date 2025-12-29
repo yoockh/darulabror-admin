@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { BlocksEditor, type BlocksEditorHandle } from "@/components/articles/blocks-editor";
 import { createArticle } from "@/lib/api/endpoints";
 import { buildArticleFormData } from "@/lib/articles/formdata";
+import { extractInlineMediaKeys } from "@/lib/articles/pending";
 import type { ArticleStatus } from "@/lib/types";
 
 export default function NewArticlePage() {
@@ -132,7 +133,17 @@ export default function NewArticlePage() {
               ref={editorRef}
               initialData={content}
               className="min-h-[60vh]"
-              onChange={setContent}
+              onChange={(data) => {
+                setContent(data);
+                const used = new Set(extractInlineMediaKeys(data));
+                setPendingFiles((prev) => {
+                  const next: Record<string, File> = {};
+                  for (const [key, file] of Object.entries(prev)) {
+                    if (used.has(key)) next[key] = file;
+                  }
+                  return next;
+                });
+              }}
               onAddPendingFile={(key, file) =>
                 setPendingFiles((prev) => ({
                   ...prev,

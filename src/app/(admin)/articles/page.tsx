@@ -153,41 +153,41 @@ function ArticlesInner() {
                   filtered.map((a, idx) => {
                     const articleId = getArticleId(a);
                     return (
-                    <TR key={String(articleId ?? `${a.title ?? "row"}-${idx}`)}>
-                      <TD className="font-medium">{a.title}</TD>
-                      <TD>{a.author}</TD>
-                      <TD>
-                        <Badge variant={statusBadgeVariant(a.status) as any}>
-                          {articleStatusLabel(String(a.status ?? ""))}
-                        </Badge>
-                      </TD>
-                      <TD>{formatDateTime(String(a.updated_at ?? a.created_at ?? ""))}</TD>
-                      <TD>
-                        <div className="flex flex-wrap gap-2">
-                          {articleId ? (
-                            <Button asChild variant="outline" size="sm">
-                              <Link href={`/articles/${articleId}`}>Edit</Link>
+                      <TR key={String(articleId ?? `${a.title ?? "row"}-${idx}`)}>
+                        <TD className="font-medium">{a.title}</TD>
+                        <TD>{a.author}</TD>
+                        <TD>
+                          <Badge variant={statusBadgeVariant(a.status) as any}>
+                            {articleStatusLabel(String(a.status ?? ""))}
+                          </Badge>
+                        </TD>
+                        <TD>{formatDateTime(String(a.updated_at ?? a.created_at ?? ""))}</TD>
+                        <TD>
+                          <div className="flex flex-wrap gap-2">
+                            {articleId ? (
+                              <Button asChild variant="outline" size="sm">
+                                <Link href={`/articles/${articleId}`}>Edit</Link>
+                              </Button>
+                            ) : (
+                              <Button variant="outline" size="sm" disabled>
+                                Edit
+                              </Button>
+                            )}
+                            <Button
+                              variant="danger"
+                              size="sm"
+                              onClick={() => {
+                                setSelected(a);
+                                setDeleteOpen(true);
+                              }}
+                            >
+                              Delete
                             </Button>
-                          ) : (
-                            <Button variant="outline" size="sm" disabled>
-                              Edit
-                            </Button>
-                          )}
-                          <Button
-                            variant="danger"
-                            size="sm"
-                            onClick={() => {
-                              setSelected(a);
-                              setDeleteOpen(true);
-                            }}
-                          >
-                            Delete
-                          </Button>
-                        </div>
-                      </TD>
-                    </TR>
+                          </div>
+                        </TD>
+                      </TR>
                     );
-                  })}
+                  })
                 )}
               </TBody>
             </Table>

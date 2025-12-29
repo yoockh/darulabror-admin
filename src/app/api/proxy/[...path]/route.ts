@@ -1,4 +1,5 @@
 import { getApiBaseUrl } from "@/lib/config";
+import type { NextRequest } from "next/server";
 
 export const runtime = "nodejs";
 
@@ -35,8 +36,12 @@ function filterRequestHeaders(headers: Headers) {
   return out;
 }
 
-async function handler(request: Request, ctx: { params: Params }) {
-  const targetUrl = buildTargetUrl(request.url, ctx.params);
+async function handler(
+  request: NextRequest,
+  ctx: { params: Promise<{ path?: string[] }> },
+) {
+  const params = await ctx.params;
+  const targetUrl = buildTargetUrl(request.url, params);
   const method = request.method.toUpperCase();
 
   // Same-origin requests shouldn't need CORS, but OPTIONS can happen in tooling.
