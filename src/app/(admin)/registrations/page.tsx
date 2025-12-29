@@ -15,6 +15,7 @@ import { Table, TBody, THead, TR, TH, TD, TableEmptyState } from "@/components/u
 import { listRegistrations } from "@/lib/api/endpoints";
 import { unwrapPaginated } from "@/lib/paginated";
 import { formatDateTime } from "@/lib/format";
+import { registrationStatusLabel } from "@/lib/status";
 import type { RegistrationDTO, RegistrationStatus } from "@/lib/types";
 
 function statusBadgeVariant(status?: string) {
@@ -98,11 +99,11 @@ function RegistrationsInner() {
                 value={status}
                 onChange={(e) => setParam("status", e.target.value)}
               >
-                <option value="all">All</option>
-                <option value="new">new</option>
-                <option value="validate">validate</option>
-                <option value="process">process</option>
-                <option value="done">done</option>
+                <option value="all">Semua</option>
+                <option value="new">{registrationStatusLabel("new")}</option>
+                <option value="validate">{registrationStatusLabel("validate")}</option>
+                <option value="process">{registrationStatusLabel("process")}</option>
+                <option value="done">{registrationStatusLabel("done")}</option>
               </Select>
             </div>
             <div className="space-y-1 md:col-span-2">
@@ -155,7 +156,7 @@ function RegistrationsInner() {
                       <TD>{String((r as any).student_type ?? "-")}</TD>
                       <TD>
                         <Badge variant={statusBadgeVariant(String((r as any).status ?? "")) as any}>
-                          {String((r as any).status ?? "-")}
+                          {registrationStatusLabel(String((r as any).status ?? ""))}
                         </Badge>
                       </TD>
                       <TD>{formatDateTime(String((r as any).created_at ?? ""))}</TD>

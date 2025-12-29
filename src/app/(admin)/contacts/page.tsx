@@ -15,6 +15,7 @@ import { Table, TBody, THead, TR, TH, TD, TableEmptyState } from "@/components/u
 import { listContacts } from "@/lib/api/endpoints";
 import { unwrapPaginated } from "@/lib/paginated";
 import { formatDateTime } from "@/lib/format";
+import { contactStatusLabel } from "@/lib/status";
 import type { ContactDTO, ContactStatus } from "@/lib/types";
 
 function statusBadgeVariant(status?: string) {
@@ -93,10 +94,10 @@ function ContactsInner() {
             <div className="space-y-1">
               <label className="text-sm font-medium">Status</label>
               <Select value={status} onChange={(e) => setParam("status", e.target.value)}>
-                <option value="all">All</option>
-                <option value="new">new</option>
-                <option value="in_progress">in_progress</option>
-                <option value="done">done</option>
+                <option value="all">Semua</option>
+                <option value="new">{contactStatusLabel("new")}</option>
+                <option value="in_progress">{contactStatusLabel("in_progress")}</option>
+                <option value="done">{contactStatusLabel("done")}</option>
               </Select>
             </div>
             <div className="space-y-1 md:col-span-2">
@@ -147,7 +148,7 @@ function ContactsInner() {
                       <TD>{String((c as any).subject ?? "-")}</TD>
                       <TD>
                         <Badge variant={statusBadgeVariant(String((c as any).status ?? "")) as any}>
-                          {String((c as any).status ?? "-")}
+                          {contactStatusLabel(String((c as any).status ?? ""))}
                         </Badge>
                       </TD>
                       <TD>{formatDateTime(String((c as any).created_at ?? ""))}</TD>

@@ -49,6 +49,7 @@ export default function EditArticlePage() {
   const [content, setContent] = React.useState<OutputData>({ blocks: [] } as any);
 
   React.useEffect(() => {
+    if (!id) return;
     let cancelled = false;
     (async () => {
       try {

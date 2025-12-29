@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { listContacts, listRegistrations } from "@/lib/api/endpoints";
 import { unwrapPaginated } from "@/lib/paginated";
+import { contactStatusLabel, registrationStatusLabel } from "@/lib/status";
 import type { ContactDTO, RegistrationDTO } from "@/lib/types";
 
 function StatCard({
@@ -37,6 +38,78 @@ function StatCard({
         </CardContent>
       </Card>
     </Link>
+  );
+}
+
+function Donut({
+  parts,
+}: {
+  parts: Array<{ label: string; value: number; color: string }>;
+}) {
+  const total = parts.reduce((a, p) => a + (Number.isFinite(p.value) ? p.value : 0), 0);
+  const size = 120;
+  const stroke = 14;
+  const r = (size - stroke) / 2;
+  const c = 2 * Math.PI * r;
+
+  let offset = 0;
+
+  return (
+    <div className="flex items-center gap-4">
+      <div className="relative" style={{ width: size, height: size }}>
+        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={r}
+            fill="none"
+            stroke="rgba(229,231,235,0.10)"
+            strokeWidth={stroke}
+          />
+          {parts.map((p, i) => {
+            const v = Number.isFinite(p.value) ? p.value : 0;
+            const frac = total > 0 ? v / total : 0;
+            const dash = frac * c;
+            const dashArray = `${dash} ${c - dash}`;
+            const dashOffset = -offset;
+            offset += dash;
+            return (
+              <circle
+                key={i}
+                cx={size / 2}
+                cy={size / 2}
+                r={r}
+                fill="none"
+                stroke={p.color}
+                strokeWidth={stroke}
+                strokeLinecap="round"
+                strokeDasharray={dashArray}
+                strokeDashoffset={dashOffset}
+                transform={`rotate(-90 ${size / 2} ${size / 2})`}
+              />
+            );
+          })}
+        </svg>
+        <div className="absolute inset-0 grid place-items-center">
+          <div className="text-center">
+            <div className="text-xs text-[var(--da-text-secondary)]">Total</div>
+            <div className="text-lg font-semibold text-[var(--da-text-primary)]">{total}</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-2 text-sm">
+        {parts.map((p) => (
+          <div key={p.label} className="flex items-center justify-between gap-6">
+            <div className="flex items-center gap-2">
+              <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: p.color }} />
+              <span className="text-[var(--da-text-primary)]">{p.label}</span>
+            </div>
+            <div className="text-[var(--da-text-secondary)]">{p.value}</div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -94,39 +167,106 @@ export default function DashboardPage() {
         <p className="text-sm text-[var(--da-text-secondary)]">Ringkasan pekerjaan hari ini.</p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        {loading ? (
-          <Card>
-            <CardHeader>
-              <CardTitle>Ringkasan</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <Skeleton className="h-10 w-24" />
-                <Skeleton className="h-4 w-56" />
-              </div>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="md:col-span-2">
-            <div className="mb-2 text-sm font-semibold text-[var(--da-text-primary)]">Registrations</div>
-            <div className="grid gap-4 md:grid-cols-4">
-              <StatCard context="Registrations" title="New" value={regCounts.new ?? 0} href="/registrations?status=new" variant="default" />
-              <StatCard context="Registrations" title="Validate" value={regCounts.validate ?? 0} href="/registrations?status=validate" variant="warning" />
-              <StatCard context="Registrations" title="Process" value={regCounts.process ?? 0} href="/registrations?status=process" variant="warning" />
-              <StatCard context="Registrations" title="Done" value={regCounts.done ?? 0} href="/registrations?status=done" variant="success" />
+      <Card>
+        <CardHeader>
+          <CardTitle>Report Registrations</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <div className="space-y-2">
+              <Skeleton className="h-8 w-40" />
+              <Skeleton className="h-28 w-full" />
             </div>
-          </div>
-        )}
-      </div>
+          ) : (
+            <div className="grid gap-4 lg:grid-cols-[1fr_360px]">
+              <div>
+                <div className="grid gap-4 md:grid-cols-4">
+                  <StatCard
+                    context="Registrations"
+                    title={registrationStatusLabel("new")}
+                    value={regCounts.new ?? 0}
+                    href="/registrations?status=new"
+                    variant="default"
+                  />
+                  <StatCard
+                    context="Registrations"
+                    title={registrationStatusLabel("validate")}
+                    value={regCounts.validate ?? 0}
+                    href="/registrations?status=validate"
+                    variant="warning"
+                  />
+                  <StatCard
+                    context="Registrations"
+                    title={registrationStatusLabel("process")}
+                    value={regCounts.process ?? 0}
+                    href="/registrations?status=process"
+                    variant="warning"
+                  />
+                  <StatCard
+                    context="Registrations"
+                    title={registrationStatusLabel("done")}
+                    value={regCounts.done ?? 0}
+                    href="/registrations?status=done"
+                    variant="success"
+                  />
+                </div>
+              </div>
 
-      {loading ? null : (
-        <div className="grid gap-4 md:grid-cols-3">
-          <StatCard context="Contacts" title="New" value={contactCounts.new ?? 0} href="/contacts?status=new" variant="default" />
-          <StatCard context="Contacts" title="In Progress" value={contactCounts.in_progress ?? 0} href="/contacts?status=in_progress" variant="warning" />
-          <StatCard context="Contacts" title="Done" value={contactCounts.done ?? 0} href="/contacts?status=done" variant="success" />
-        </div>
-      )}
+              <div className="rounded-xl border border-[var(--da-border)] bg-[var(--da-glass-bg)] p-4">
+                <div className="text-sm font-semibold text-[var(--da-text-primary)]">Distribusi Status</div>
+                <div className="mt-3">
+                  <Donut
+                    parts={[
+                      { label: registrationStatusLabel("new"), value: regCounts.new ?? 0, color: "rgba(229,231,235,0.35)" },
+                      { label: registrationStatusLabel("validate"), value: regCounts.validate ?? 0, color: "rgba(250,204,21,0.75)" },
+                      { label: registrationStatusLabel("process"), value: regCounts.process ?? 0, color: "rgba(59,130,246,0.65)" },
+                      { label: registrationStatusLabel("done"), value: regCounts.done ?? 0, color: "rgba(16,185,129,0.85)" },
+                    ]}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Report Contacts</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <div className="space-y-2">
+              <Skeleton className="h-8 w-40" />
+              <Skeleton className="h-28 w-full" />
+            </div>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-3">
+              <StatCard
+                context="Contacts"
+                title={contactStatusLabel("new")}
+                value={contactCounts.new ?? 0}
+                href="/contacts?status=new"
+                variant="default"
+              />
+              <StatCard
+                context="Contacts"
+                title={contactStatusLabel("in_progress")}
+                value={contactCounts.in_progress ?? 0}
+                href="/contacts?status=in_progress"
+                variant="warning"
+              />
+              <StatCard
+                context="Contacts"
+                title={contactStatusLabel("done")}
+                value={contactCounts.done ?? 0}
+                href="/contacts?status=done"
+                variant="success"
+              />
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
@@ -146,7 +286,9 @@ export default function DashboardPage() {
                   recentRegistrations.map((r) => (
                     <div key={String(r.id)} className="flex items-center justify-between">
                       <div className="truncate">{String((r as any).full_name ?? r.id)}</div>
-                      <div className="text-[var(--da-text-secondary)]">{String((r as any).status ?? "-")}</div>
+                      <div className="text-[var(--da-text-secondary)]">
+                        {registrationStatusLabel(String((r as any).status ?? ""))}
+                      </div>
                     </div>
                   ))
                 ) : (
@@ -174,7 +316,9 @@ export default function DashboardPage() {
                   recentContacts.map((c) => (
                     <div key={String(c.id)} className="flex items-center justify-between">
                       <div className="truncate">{String((c as any).subject ?? c.id)}</div>
-                      <div className="text-[var(--da-text-secondary)]">{String((c as any).status ?? "-")}</div>
+                      <div className="text-[var(--da-text-secondary)]">
+                        {contactStatusLabel(String((c as any).status ?? ""))}
+                      </div>
                     </div>
                   ))
                 ) : (

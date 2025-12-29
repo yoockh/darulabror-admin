@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDateTime } from "@/lib/format";
 import { getRegistration, patchRegistrationStatus } from "@/lib/api/endpoints";
+import { registrationStatusLabel } from "@/lib/status";
 import type { RegistrationDTO, RegistrationStatus } from "@/lib/types";
 
 function statusBadgeVariant(status?: string) {
@@ -17,6 +18,15 @@ function statusBadgeVariant(status?: string) {
   if (status === "validate" || status === "process") return "warning";
   if (status === "new") return "default";
   return "default";
+}
+
+function Field({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <div className="grid gap-1">
+      <div className="text-xs text-[var(--da-text-secondary)]">{label}</div>
+      <div className="text-sm text-[var(--da-text-primary)]">{value}</div>
+    </div>
+  );
 }
 
 export default function RegistrationDetailPage() {
@@ -29,6 +39,7 @@ export default function RegistrationDetailPage() {
   const [status, setStatus] = React.useState<RegistrationStatus>("new");
 
   React.useEffect(() => {
+    if (!id) return;
     let cancelled = false;
     (async () => {
       try {
@@ -71,7 +82,7 @@ export default function RegistrationDetailPage() {
           </p>
         </div>
         <Badge variant={statusBadgeVariant(String((data as any).status ?? "")) as any}>
-          {String((data as any).status ?? "-")}
+          {registrationStatusLabel(String((data as any).status ?? ""))}
         </Badge>
       </div>
 
@@ -81,12 +92,17 @@ export default function RegistrationDetailPage() {
             <CardTitle>Data Siswa</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2 text-sm">
-              <div>Full Name: {String((data as any).full_name ?? "-")}</div>
-              <div>Email: {String((data as any).email ?? "-")}</div>
-              <div>Phone: {String((data as any).phone ?? "-")}</div>
-              <div>NISN: {String((data as any).nisn ?? "-")}</div>
-              <div>Student Type: {String((data as any).student_type ?? "-")}</div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Field label="Nama Lengkap" value={String((data as any).full_name ?? "-")} />
+              <Field label="Tipe Siswa" value={String((data as any).student_type ?? "-")} />
+              <Field label="Email" value={String((data as any).email ?? "-")} />
+              <Field label="No. HP" value={String((data as any).phone ?? "-")} />
+              <Field label="NISN" value={String((data as any).nisn ?? "-")} />
+              <Field label="Jenis Kelamin" value={String((data as any).gender ?? "-")} />
+              <Field label="Tempat Lahir" value={String((data as any).place_of_birth ?? "-")} />
+              <Field label="Tanggal Lahir" value={String((data as any).date_of_birth ?? "-")} />
+              <Field label="Asal Sekolah" value={String((data as any).origin_school ?? "-")} />
+              <Field label="Alamat" value={String((data as any).address ?? "-")} />
             </div>
           </CardContent>
         </Card>
@@ -100,15 +116,19 @@ export default function RegistrationDetailPage() {
               <div className="space-y-1">
                 <label className="text-sm font-medium">Status</label>
                 <Select value={status} onChange={(e) => setStatus(e.target.value as any)}>
-                  <option value="new">new</option>
-                  <option value="validate">validate</option>
-                  <option value="process">process</option>
-                  <option value="done">done</option>
+                  <option value="new">{registrationStatusLabel("new")}</option>
+                  <option value="validate">{registrationStatusLabel("validate")}</option>
+                  <option value="process">{registrationStatusLabel("process")}</option>
+                  <option value="done">{registrationStatusLabel("done")}</option>
                 </Select>
               </div>
               <Button
                 disabled={saving}
                 onClick={async () => {
+                  if (!id) {
+                    toast.error("ID tidak valid.");
+                    return;
+                  }
                   setSaving(true);
                   const prev = (data as any).status;
                   setData({ ...data, status } as any);
@@ -132,12 +152,30 @@ export default function RegistrationDetailPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Raw Data</CardTitle>
+          <CardTitle>Data Orang Tua</CardTitle>
         </CardHeader>
         <CardContent>
-          <pre className="overflow-auto rounded-md bg-[var(--da-bg)] p-3 text-xs">
-            {JSON.stringify(data, null, 2)}
-          </pre>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="rounded-xl border border-[var(--da-border)] bg-[var(--da-glass-bg)] p-4">
+              <div className="text-sm font-semibold text-[var(--da-text-primary)]">Ayah</div>
+              <div className="mt-3 grid gap-3 md:grid-cols-2">
+                <Field label="Nama" value={String((data as any).father_name ?? "-")} />
+                <Field label="Pekerjaan" value={String((data as any).father_occupation ?? "-")} />
+                <Field label="No. HP" value={String((data as any).phone_father ?? "-")} />
+                <Field label="Tanggal Lahir" value={String((data as any).date_of_birth_father ?? "-")} />
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-[var(--da-border)] bg-[var(--da-glass-bg)] p-4">
+              <div className="text-sm font-semibold text-[var(--da-text-primary)]">Ibu</div>
+              <div className="mt-3 grid gap-3 md:grid-cols-2">
+                <Field label="Nama" value={String((data as any).mother_name ?? "-")} />
+                <Field label="Pekerjaan" value={String((data as any).mother_occupation ?? "-")} />
+                <Field label="No. HP" value={String((data as any).phone_mother ?? "-")} />
+                <Field label="Tanggal Lahir" value={String((data as any).date_of_birth_mother ?? "-")} />
+              </div>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>

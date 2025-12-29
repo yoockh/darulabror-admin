@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDateTime } from "@/lib/format";
 import { getContact, patchContactStatus } from "@/lib/api/endpoints";
+import { contactStatusLabel } from "@/lib/status";
 import type { ContactDTO, ContactStatus } from "@/lib/types";
 
 function statusBadgeVariant(status?: string) {
@@ -29,6 +30,7 @@ export default function ContactDetailPage() {
   const [status, setStatus] = React.useState<ContactStatus>("new");
 
   React.useEffect(() => {
+    if (!id) return;
     let cancelled = false;
     (async () => {
       try {
@@ -78,7 +80,7 @@ export default function ContactDetailPage() {
           </p>
         </div>
         <Badge variant={statusBadgeVariant(String((data as any).status ?? "")) as any}>
-          {String((data as any).status ?? "-")}
+          {contactStatusLabel(String((data as any).status ?? ""))}
         </Badge>
       </div>
 
@@ -128,14 +130,18 @@ export default function ContactDetailPage() {
               <div className="space-y-1">
                 <label className="text-sm font-medium">Status</label>
                 <Select value={status} onChange={(e) => setStatus(e.target.value as any)}>
-                  <option value="new">new</option>
-                  <option value="in_progress">in_progress</option>
-                  <option value="done">done</option>
+                  <option value="new">{contactStatusLabel("new")}</option>
+                  <option value="in_progress">{contactStatusLabel("in_progress")}</option>
+                  <option value="done">{contactStatusLabel("done")}</option>
                 </Select>
               </div>
               <Button
                 disabled={saving}
                 onClick={async () => {
+                  if (!id) {
+                    toast.error("ID tidak valid.");
+                    return;
+                  }
                   setSaving(true);
                   const prev = (data as any).status;
                   setData({ ...data, status } as any);
