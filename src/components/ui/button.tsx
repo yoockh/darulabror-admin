@@ -7,6 +7,7 @@ type ButtonSize = "sm" | "md";
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: ButtonVariant;
   size?: ButtonSize;
+  asChild?: boolean;
 };
 
 const base =
@@ -31,27 +32,23 @@ export function Button({
   className,
   variant = "primary",
   size = "md",
+  asChild,
+  children,
   ...props
 }: ButtonProps) {
-  return (
-    <button
-      className={cn(base, variants[variant], sizes[size], className)}
-      {...props}
-    />
-  );
-}
+  const classes = cn(base, variants[variant], sizes[size], className);
 
-// Minimal `asChild` helper (shadcn-style)
-export function ButtonLink({
-  className,
-  variant = "primary",
-  size = "md",
-  ...props
-}: React.AnchorHTMLAttributes<HTMLAnchorElement> & {
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-}) {
+  if (asChild) {
+    const child = React.Children.only(children);
+    if (!React.isValidElement(child)) return null;
+    return React.cloneElement(child as any, {
+      className: cn((child as any).props?.className, classes),
+    });
+  }
+
   return (
-    <a className={cn(base, variants[variant], sizes[size], className)} {...props} />
+    <button className={classes} {...props}>
+      {children}
+    </button>
   );
 }
