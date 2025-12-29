@@ -104,10 +104,17 @@ dialog::backdrop {
 }
 
 .ce-popover__item:hover,
+.ce-popover-item:hover,
 .ce-inline-toolbar__dropdown:hover,
 .ce-inline-tool:hover,
 .ce-toolbox__button:hover {
-  background: rgba(229, 231, 235, 0.035) !important;
+  background: rgba(229, 231, 235, 0.02) !important;
+  color: var(--da-text-primary) !important;
+}
+
+.ce-popover__item:hover *,
+.ce-popover-item:hover * {
+  color: var(--da-text-primary) !important;
 }
 
 .ce-popover__item,

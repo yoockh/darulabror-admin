@@ -76,7 +76,11 @@ export const BlocksEditor = React.forwardRef<BlocksEditorHandle, BlocksEditorPro
         const Quote = (await import("@editorjs/quote")).default;
         const ImageTool = (await import("@editorjs/image")).default;
         const embedMod = await import("@editorjs/embed");
-        const Embed = ((embedMod as any).default ?? (embedMod as any)) as any;
+        const Embed =
+          ((embedMod as any).default ??
+            (embedMod as any).Embed ??
+            (embedMod as any).embed ??
+            (embedMod as any)) as any;
 
         if (cancelled) return;
 
@@ -86,11 +90,13 @@ export const BlocksEditor = React.forwardRef<BlocksEditorHandle, BlocksEditorPro
           autofocus: false,
           data: initialData,
           tools: {
-            embed: {
-              class: Embed as any,
+            ...(typeof Embed === "function"
+              ? {
+                  embed: {
+                    class: Embed as any,
               inlineToolbar: false,
               toolbox: {
-                title: "YouTube",
+                title: "Embed (YouTube)",
                 icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M21.6 7.2c-.2-1.1-1.1-2-2.2-2.2C17.6 4.6 12 4.6 12 4.6s-5.6 0-7.4.4C3.5 5.2 2.6 6.1 2.4 7.2 2 9 2 12 2 12s0 3 .4 4.8c.2 1.1 1.1 2 2.2 2.2 1.8.4 7.4.4 7.4.4s5.6 0 7.4-.4c1.1-.2 2-1.1 2.2-2.2.4-1.8.4-4.8.4-4.8s0-3-.4-4.8ZM10 15.5v-7l6 3.5-6 3.5Z"/></svg>',
               },
               config: {
@@ -98,7 +104,9 @@ export const BlocksEditor = React.forwardRef<BlocksEditorHandle, BlocksEditorPro
                   youtube: true,
                 },
               },
-            },
+                  },
+                }
+              : {}),
             header: {
               class: Header as any,
               inlineToolbar: true,

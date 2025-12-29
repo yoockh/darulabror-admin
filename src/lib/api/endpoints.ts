@@ -12,6 +12,19 @@ import type {
   RegistrationStatus,
 } from "@/lib/types";
 
+function extractArticleId(a: any): string | number | null {
+  const id =
+    a?.id ??
+    a?.article_id ??
+    a?.articleId ??
+    a?.article_uuid ??
+    a?.uuid ??
+    a?.slug ??
+    a?.article_slug;
+  if (id === undefined || id === null || id === "") return null;
+  return id;
+}
+
 function withId(template: string, id: string | number) {
   return template.replace(":id", encodeURIComponent(String(id)));
 }
@@ -162,6 +175,32 @@ export async function getArticle(id: string | number) {
         continue;
       }
       throw e;
+    }
+  }
+
+  // Some backends implement PUT/DELETE by ID but do not expose GET detail.
+  // Fallback: scan list endpoint pages and match by id.
+  const wanted = String(id);
+  for (let page = 1; page <= 8; page++) {
+    try {
+      const res = await listArticles({ page, limit: 50 });
+      const items = Array.isArray(res)
+        ? (res as any[])
+        : Array.isArray((res as any)?.items)
+          ? (res as any).items
+          : Array.isArray((res as any)?.data)
+            ? (res as any).data
+            : [];
+      for (const a of items) {
+        const got = extractArticleId(a);
+        if (got === null) continue;
+        if (String(got) === wanted) return a as ArticleDTO;
+      }
+      // if this page is empty, stop early
+      if (items.length === 0) break;
+    } catch (e) {
+      // ignore list failures; keep original error semantics
+      break;
     }
   }
 

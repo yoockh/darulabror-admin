@@ -19,20 +19,17 @@ export function buildArticleFormData(input: ArticleFormDataInput) {
   fd.append("content", JSON.stringify(input.content ?? { blocks: [] }));
 
   if (input.photoHeaderFile) {
-    fd.append("photo_header", input.photoHeaderFile);
+    // swagger: photo_header_file
+    fd.append("photo_header_file", input.photoHeaderFile);
   } else if (input.deletePhotoHeader) {
-    // backend boleh ignore field ini jika tidak dipakai
+    // swagger doesn't define a delete flag; keep compatibility for backends that support it
     fd.append("delete_photo_header", "1");
   }
 
   const pending = input.pendingFiles ?? {};
   for (const [key, file] of Object.entries(pending)) {
-    // Field name untuk inline media tidak terdokumentasi di repo.
-    // Kita kirim sebagai media_files dengan filename berisi key agar backend bisa mapping.
-    fd.append("media_files", file, key);
-  }
-  if (Object.keys(pending).length > 0) {
-    fd.append("media_keys", JSON.stringify(Object.keys(pending)));
+    // swagger: content_files[<upload_key>]
+    fd.append(`content_files[${key}]`, file);
   }
 
   return fd;
