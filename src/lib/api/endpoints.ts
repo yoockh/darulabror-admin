@@ -1,4 +1,5 @@
 import { apiFetch } from "@/lib/api";
+import { ApiError } from "@/lib/api";
 import { API_PATHS } from "@/lib/config";
 import type {
   AdminDTO,
@@ -139,7 +140,32 @@ export async function listArticles(params: {
 }
 
 export async function getArticle(id: string | number) {
-  return apiFetch<ArticleDTO>(withId(API_PATHS.articleEdit, id), { method: "GET" });
+  const encoded = encodeURIComponent(String(id));
+  const candidates = Array.from(
+    new Set([
+      // primary (what swagger shows for PUT; some backends also support GET here)
+      withId(API_PATHS.articleEdit, id),
+      // common alternatives (some APIs separate detail endpoints)
+      `${API_PATHS.articles}/${encoded}`,
+      `${API_PATHS.articles}/${encoded}/detail`,
+      `${API_PATHS.articles}/detail/${encoded}`,
+    ]),
+  );
+
+  let last404: unknown = null;
+  for (const path of candidates) {
+    try {
+      return await apiFetch<ArticleDTO>(path, { method: "GET" });
+    } catch (e) {
+      if (e instanceof ApiError && e.status === 404) {
+        last404 = e;
+        continue;
+      }
+      throw e;
+    }
+  }
+
+  throw (last404 as any) ?? new ApiError("Artikel tidak ditemukan.", 404);
 }
 
 export async function createArticle(formData: FormData) {

@@ -26,7 +26,14 @@ function statusBadgeVariant(status?: string) {
 }
 
 function getArticleId(a: any): string | number | null {
-  const id = a?.id ?? a?.article_id ?? a?.articleId;
+  const id =
+    a?.id ??
+    a?.article_id ??
+    a?.articleId ??
+    a?.article_uuid ??
+    a?.uuid ??
+    a?.slug ??
+    a?.article_slug;
   if (id === undefined || id === null || id === "") return null;
   return id;
 }
@@ -152,6 +159,7 @@ function ArticlesInner() {
                 ) : (
                   filtered.map((a, idx) => {
                     const articleId = getArticleId(a);
+                    const hrefId = articleId ? encodeURIComponent(String(articleId)) : null;
                     return (
                       <TR key={String(articleId ?? `${a.title ?? "row"}-${idx}`)}>
                         <TD className="font-medium">{a.title}</TD>
@@ -166,7 +174,7 @@ function ArticlesInner() {
                           <div className="flex flex-wrap gap-2">
                             {articleId ? (
                               <Button asChild variant="outline" size="sm">
-                                <Link href={`/articles/${articleId}`}>Edit</Link>
+                                <Link href={`/articles/${hrefId}`}>Edit</Link>
                               </Button>
                             ) : (
                               <Button variant="outline" size="sm" disabled>

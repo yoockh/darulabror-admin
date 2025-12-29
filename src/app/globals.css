@@ -77,11 +77,37 @@ dialog::backdrop {
   backdrop-filter: blur(16px) !important;
 }
 
+/* Some Editor.js versions use toolbox/settings containers separate from .ce-popover */
+.ce-toolbox__popover,
+.ce-settings,
+.ce-settings__popover,
+.ce-popover__container {
+  background: var(--da-glass-bg-strong) !important;
+  border: 1px solid var(--da-glass-border) !important;
+  box-shadow: var(--da-glass-shadow) !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+.cdx-input,
+.cdx-search-field__input,
+.ce-popover__search,
+.ce-popover__search-input {
+  background: rgba(229, 231, 235, 0.06) !important;
+  border: 1px solid var(--da-glass-border) !important;
+  color: var(--da-text-primary) !important;
+}
+
+.cdx-input::placeholder,
+.cdx-search-field__input::placeholder,
+.ce-popover__search-input::placeholder {
+  color: rgba(229, 231, 235, 0.55) !important;
+}
+
 .ce-popover__item:hover,
 .ce-inline-toolbar__dropdown:hover,
 .ce-inline-tool:hover,
 .ce-toolbox__button:hover {
-  background: rgba(229, 231, 235, 0.06) !important;
+  background: rgba(229, 231, 235, 0.035) !important;
 }
 
 .ce-popover__item,
@@ -96,4 +122,10 @@ dialog::backdrop {
 .ce-toolbar__plus svg {
   color: var(--da-text-primary) !important;
   fill: currentColor !important;
+}
+
+/* Ensure toolbox buttons/icons don't invert to white background */
+.ce-toolbox__button,
+.ce-settings__button {
+  color: var(--da-text-primary) !important;
 }
