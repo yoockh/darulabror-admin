@@ -70,21 +70,21 @@ export default function AdminLayout({
     <div className="min-h-screen bg-[var(--da-bg)]">
       <Topbar onOpenSidebar={() => setDrawerOpen(true)} />
 
-      <div className="mx-auto flex max-w-6xl">
-        <div className="hidden h-[calc(100vh-53px)] md:block">
+      <div className="flex">
+        <div className="hidden md:block">
           <Sidebar />
         </div>
-        <main className="min-w-0 flex-1 p-6">{children}</main>
+        <main className="min-w-0 flex-1 p-6 md:ml-72">{children}</main>
       </div>
 
       {drawerOpen ? (
-        <div className="fixed inset-0 z-30 md:hidden">
+        <div className="fixed inset-0 z-50 md:hidden">
           <button
-            className="absolute inset-0 bg-black/40"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             aria-label="Tutup menu"
             onClick={() => setDrawerOpen(false)}
           />
-          <div className="relative h-full w-72 bg-[var(--da-glass-bg-strong)] backdrop-blur-xl shadow-[var(--da-hover-shadow)]">
+          <div className="relative h-full w-72 shadow-2xl animate-in slide-in-from-left duration-300">
             <Sidebar onNavigate={() => setDrawerOpen(false)} />
           </div>
         </div>
