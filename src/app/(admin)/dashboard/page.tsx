@@ -11,11 +11,13 @@ import type { ContactDTO, RegistrationDTO } from "@/lib/types";
 
 function StatCard({
   title,
+  context,
   value,
   href,
   variant,
 }: {
   title: string;
+  context: string;
   value: number;
   href: string;
   variant: "default" | "warning" | "success";
@@ -26,7 +28,7 @@ function StatCard({
         <CardHeader>
           <CardTitle className="flex items-center justify-between gap-2">
             <span>{title}</span>
-            <Badge variant={variant as any}>{title.toLowerCase()}</Badge>
+            <Badge variant={variant as any}>{context}</Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -106,20 +108,23 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid gap-4 md:col-span-2 md:grid-cols-4">
-            <StatCard title="New" value={regCounts.new ?? 0} href="/registrations?status=new" variant="default" />
-            <StatCard title="Validate" value={regCounts.validate ?? 0} href="/registrations?status=validate" variant="warning" />
-            <StatCard title="Process" value={regCounts.process ?? 0} href="/registrations?status=process" variant="warning" />
-            <StatCard title="Done" value={regCounts.done ?? 0} href="/registrations?status=done" variant="success" />
+          <div className="md:col-span-2">
+            <div className="mb-2 text-sm font-semibold text-[var(--da-text-primary)]">Registrations</div>
+            <div className="grid gap-4 md:grid-cols-4">
+              <StatCard context="Registrations" title="New" value={regCounts.new ?? 0} href="/registrations?status=new" variant="default" />
+              <StatCard context="Registrations" title="Validate" value={regCounts.validate ?? 0} href="/registrations?status=validate" variant="warning" />
+              <StatCard context="Registrations" title="Process" value={regCounts.process ?? 0} href="/registrations?status=process" variant="warning" />
+              <StatCard context="Registrations" title="Done" value={regCounts.done ?? 0} href="/registrations?status=done" variant="success" />
+            </div>
           </div>
         )}
       </div>
 
       {loading ? null : (
         <div className="grid gap-4 md:grid-cols-3">
-          <StatCard title="Contact New" value={contactCounts.new ?? 0} href="/contacts?status=new" variant="default" />
-          <StatCard title="Contact In Progress" value={contactCounts.in_progress ?? 0} href="/contacts?status=in_progress" variant="warning" />
-          <StatCard title="Contact Done" value={contactCounts.done ?? 0} href="/contacts?status=done" variant="success" />
+          <StatCard context="Contacts" title="New" value={contactCounts.new ?? 0} href="/contacts?status=new" variant="default" />
+          <StatCard context="Contacts" title="In Progress" value={contactCounts.in_progress ?? 0} href="/contacts?status=in_progress" variant="warning" />
+          <StatCard context="Contacts" title="Done" value={contactCounts.done ?? 0} href="/contacts?status=done" variant="success" />
         </div>
       )}
 

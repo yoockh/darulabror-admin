@@ -142,7 +142,7 @@ export default function EditArticlePage() {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="space-y-4">
         <Card>
           <CardHeader>
             <CardTitle>Meta</CardTitle>
@@ -211,6 +211,7 @@ export default function EditArticlePage() {
             <BlocksEditor
               ref={editorRef}
               initialData={content}
+              className="min-h-[60vh]"
               onChange={setContent}
               onAddPendingFile={(key, file) =>
                 setPendingFiles((prev) => ({
