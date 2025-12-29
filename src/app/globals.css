@@ -1,56 +1,56 @@
 @import "tailwindcss";
 
 :root {
-  /* Modern vibrant theme */
-  --da-primary: #6366f1;
-  --da-primary-dark: #4f46e5;
-  --da-secondary: #ec4899;
-  --da-accent: #14b8a6;
-  --da-success: #10b981;
-  --da-warning: #f59e0b;
-  --da-bg: #f8fafc;
-  --da-text-primary: #0f172a;
-  --da-text-secondary: #64748b;
-  --da-border: rgba(15, 23, 42, 0.08);
-  --da-hover-shadow: 0 20px 50px rgba(99, 102, 241, 0.15);
-  --da-card-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  /* Dark metal theme (accent 10-15% max) */
+  --da-bg: #0d1117;
+  --da-surface: #161b22;
+  --da-surface-2: #1f2937;
+
+  --da-text-primary: #e5e7eb;
+  --da-text-secondary: #9ca3af;
+
+  /* Accents (use sparingly) */
+  --da-primary: #10b981; /* emerald */
+  --da-primary-dark: #0ea371;
+  --da-accent-blue: #3b82f6;
+  --da-warning: #facc15;
+
+  --da-border: rgba(229, 231, 235, 0.10);
+  --da-hover-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+  --da-card-shadow: 0 10px 26px rgba(0, 0, 0, 0.28);
 
   /* App chrome (Topbar/Sidebar)
      Note: keep these as CSS variables so you can change colors and see it immediately. */
-  --da-header-bg: linear-gradient(
-    90deg,
-    var(--da-primary) 0%,
-    var(--da-secondary) 55%,
-    var(--da-accent) 120%
-  );
-  --da-sidebar-bg: linear-gradient(
-    180deg,
-    var(--da-primary-dark) 0%,
-    var(--da-primary) 55%,
-    var(--da-secondary) 140%
-  );
+  --da-header-bg: var(--da-surface);
+  --da-sidebar-bg: var(--da-surface);
   --da-on-chrome: #ffffff;
 
   /* Glass surfaces */
-  --da-glass-bg: rgba(255, 255, 255, 0.7);
-  --da-glass-bg-strong: rgba(255, 255, 255, 0.85);
-  --da-glass-border: rgba(15, 23, 42, 0.08);
-  --da-glass-shadow: 0 10px 40px rgba(99, 102, 241, 0.12);
+  --da-glass-bg: rgba(22, 27, 34, 0.72);
+  --da-glass-bg-strong: rgba(31, 41, 55, 0.85);
+  --da-glass-border: rgba(229, 231, 235, 0.10);
+  --da-glass-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+
+  --da-input-bg: rgba(31, 41, 55, 0.75);
 
   --background: var(--da-bg);
   --foreground: var(--da-text-primary);
 }
 
 body {
-  background:
-    radial-gradient(1000px circle at 10% 20%, rgba(99, 102, 241, 0.12), transparent 50%),
-    radial-gradient(1200px circle at 90% 10%, rgba(236, 72, 153, 0.10), transparent 50%),
-    radial-gradient(900px circle at 50% 90%, rgba(20, 184, 166, 0.08), transparent 55%),
-    linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  background: radial-gradient(1200px circle at 15% 15%, rgba(16, 185, 129, 0.08), transparent 55%),
+    radial-gradient(900px circle at 85% 10%, rgba(59, 130, 246, 0.06), transparent 50%),
+    linear-gradient(180deg, #0d1117 0%, #0b1220 100%);
   color: var(--foreground);
   min-height: 100vh;
 }
 
 * {
   border-color: var(--da-border);
+}
+
+/* dialog backdrop */
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
 }

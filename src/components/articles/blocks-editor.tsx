@@ -126,7 +126,7 @@ export const BlocksEditor = React.forwardRef<BlocksEditorHandle, BlocksEditorPro
     return (
       <div
         className={cn(
-          "rounded-md border border-[var(--da-border)] bg-white p-3 text-[var(--da-text-primary)]",
+          "rounded-md border border-[var(--da-border)] bg-[var(--da-surface-2)] p-3 text-[var(--da-text-primary)]",
           "[&_.ce-block__content]:max-w-none [&_.ce-toolbar__content]:max-w-none",
           className,
         )}

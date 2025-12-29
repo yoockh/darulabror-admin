@@ -29,7 +29,7 @@ export function Dialog({
     <dialog
       ref={ref}
       className={cn(
-        "w-full max-w-lg rounded-xl border border-[var(--da-glass-border)] bg-[var(--da-glass-bg-strong)] p-0 shadow-[var(--da-hover-shadow)] backdrop-blur-xl",
+        "fixed left-1/2 top-1/2 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl border border-[var(--da-glass-border)] bg-[var(--da-glass-bg-strong)] p-0 shadow-[var(--da-hover-shadow)] backdrop-blur-xl",
         className,
       )}
       onClose={() => onOpenChange(false)}

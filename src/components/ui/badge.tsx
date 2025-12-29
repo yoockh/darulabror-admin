@@ -5,11 +5,11 @@ type BadgeVariant = "default" | "success" | "warning" | "danger";
 
 const variants: Record<BadgeVariant, string> = {
   default:
-    "bg-white/50 text-[var(--da-text-primary)] border-[var(--da-glass-border)] backdrop-blur-xl",
+    "bg-white/5 text-[var(--da-text-primary)] border-[var(--da-glass-border)] backdrop-blur-xl",
   success:
-    "bg-emerald-500/10 text-emerald-800 border-emerald-500/20 backdrop-blur-xl",
+    "bg-[rgba(16,185,129,0.14)] text-[rgb(110,231,183)] border-[rgba(16,185,129,0.25)] backdrop-blur-xl",
   warning:
-    "bg-amber-500/10 text-amber-800 border-amber-500/20 backdrop-blur-xl",
+    "bg-[rgba(250,204,21,0.12)] text-[rgb(253,230,138)] border-[rgba(250,204,21,0.22)] backdrop-blur-xl",
   danger: "bg-red-500/10 text-red-700 border-red-500/20 backdrop-blur-xl",
 };
 
