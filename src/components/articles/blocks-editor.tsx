@@ -48,6 +48,7 @@ export const BlocksEditor = React.forwardRef<BlocksEditorHandle, BlocksEditorPro
         const List = (await import("@editorjs/list")).default;
         const Quote = (await import("@editorjs/quote")).default;
         const ImageTool = (await import("@editorjs/image")).default;
+        const Embed = (await import("@editorjs/embed")).default;
 
         if (cancelled) return;
 
@@ -57,6 +58,15 @@ export const BlocksEditor = React.forwardRef<BlocksEditorHandle, BlocksEditorPro
           autofocus: false,
           data: initialData,
           tools: {
+            embed: {
+              class: Embed as any,
+              inlineToolbar: false,
+              config: {
+                services: {
+                  youtube: true,
+                },
+              },
+            },
             header: {
               class: Header as any,
               inlineToolbar: true,
