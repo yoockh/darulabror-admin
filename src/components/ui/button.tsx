@@ -40,3 +40,18 @@ export function Button({
     />
   );
 }
+
+// Minimal `asChild` helper (shadcn-style)
+export function ButtonLink({
+  className,
+  variant = "primary",
+  size = "md",
+  ...props
+}: React.AnchorHTMLAttributes<HTMLAnchorElement> & {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+}) {
+  return (
+    <a className={cn(base, variants[variant], sizes[size], className)} {...props} />
+  );
+}
