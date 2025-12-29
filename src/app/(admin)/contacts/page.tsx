@@ -12,38 +12,36 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TBody, THead, TR, TH, TD, TableEmptyState } from "@/components/ui/table";
-import { listRegistrations } from "@/lib/api/endpoints";
+import { listContacts } from "@/lib/api/endpoints";
 import { unwrapPaginated } from "@/lib/paginated";
 import { formatDateTime } from "@/lib/format";
-import type { RegistrationDTO, RegistrationStatus } from "@/lib/types";
+import type { ContactDTO, ContactStatus } from "@/lib/types";
 
 function statusBadgeVariant(status?: string) {
   if (status === "done") return "success";
-  if (status === "validate" || status === "process") return "warning";
+  if (status === "in_progress") return "warning";
   if (status === "new") return "default";
   return "default";
 }
 
-function RegistrationsInner() {
+function ContactsInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const page = Number(searchParams.get("page") ?? 1);
   const limit = Number(searchParams.get("limit") ?? 10);
-  const status = (searchParams.get("status") ?? "all") as
-    | "all"
-    | RegistrationStatus;
+  const status = (searchParams.get("status") ?? "all") as "all" | ContactStatus;
 
   const [query, setQuery] = React.useState("");
   const [loading, setLoading] = React.useState(true);
-  const [rows, setRows] = React.useState<RegistrationDTO[]>([]);
+  const [rows, setRows] = React.useState<ContactDTO[]>([]);
 
   React.useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
         setLoading(true);
-        const res = await listRegistrations({
+        const res = await listContacts({
           page,
           limit,
           status: status === "all" ? undefined : status,
@@ -64,11 +62,11 @@ function RegistrationsInner() {
   const filtered = React.useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return rows;
-    return rows.filter((r) => {
-      const fullName = String((r as any).full_name ?? "").toLowerCase();
-      const email = String((r as any).email ?? "").toLowerCase();
-      const nisn = String((r as any).nisn ?? "").toLowerCase();
-      return fullName.includes(q) || email.includes(q) || nisn.includes(q);
+    return rows.filter((c) => {
+      const fullName = String((c as any).full_name ?? "").toLowerCase();
+      const email = String((c as any).email ?? "").toLowerCase();
+      const subject = String((c as any).subject ?? "").toLowerCase();
+      return fullName.includes(q) || email.includes(q) || subject.includes(q);
     });
   }, [rows, query]);
 
@@ -76,14 +74,14 @@ function RegistrationsInner() {
     const sp = new URLSearchParams(searchParams.toString());
     sp.set(key, value);
     if (key !== "page") sp.set("page", "1");
-    router.push(`/registrations?${sp.toString()}`);
+    router.push(`/contacts?${sp.toString()}`);
   }
 
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-xl font-semibold text-[var(--da-text-primary)]">Registrations</h1>
-        <p className="text-sm text-[var(--da-text-secondary)]">List pendaftaran.</p>
+        <h1 className="text-xl font-semibold text-[var(--da-text-primary)]">Contacts</h1>
+        <p className="text-sm text-[var(--da-text-secondary)]">List pesan masuk.</p>
       </div>
 
       <Card>
@@ -94,14 +92,10 @@ function RegistrationsInner() {
           <div className="grid gap-3 md:grid-cols-3">
             <div className="space-y-1">
               <label className="text-sm font-medium">Status</label>
-              <Select
-                value={status}
-                onChange={(e) => setParam("status", e.target.value)}
-              >
+              <Select value={status} onChange={(e) => setParam("status", e.target.value)}>
                 <option value="all">All</option>
                 <option value="new">new</option>
-                <option value="validate">validate</option>
-                <option value="process">process</option>
+                <option value="in_progress">in_progress</option>
                 <option value="done">done</option>
               </Select>
             </div>
@@ -110,7 +104,7 @@ function RegistrationsInner() {
               <Input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Cari full_name / email / nisn"
+                placeholder="Cari full_name / email / subject"
               />
             </div>
           </div>
@@ -135,8 +129,7 @@ function RegistrationsInner() {
                   <TH>ID</TH>
                   <TH>Full Name</TH>
                   <TH>Email</TH>
-                  <TH>Phone</TH>
-                  <TH>Student Type</TH>
+                  <TH>Subject</TH>
                   <TH>Status</TH>
                   <TH>Created At</TH>
                   <TH>Action</TH>
@@ -144,24 +137,23 @@ function RegistrationsInner() {
               </THead>
               <TBody>
                 {filtered.length === 0 ? (
-                  <TableEmptyState colSpan={8} title="Belum ada data" />
+                  <TableEmptyState colSpan={7} title="Belum ada data" />
                 ) : (
-                  filtered.map((r) => (
-                    <TR key={String(r.id)}>
-                      <TD>{String(r.id)}</TD>
-                      <TD>{String((r as any).full_name ?? "-")}</TD>
-                      <TD>{String((r as any).email ?? "-")}</TD>
-                      <TD>{String((r as any).phone ?? "-")}</TD>
-                      <TD>{String((r as any).student_type ?? "-")}</TD>
+                  filtered.map((c) => (
+                    <TR key={String(c.id)}>
+                      <TD>{String(c.id)}</TD>
+                      <TD>{String((c as any).full_name ?? "-")}</TD>
+                      <TD>{String((c as any).email ?? "-")}</TD>
+                      <TD>{String((c as any).subject ?? "-")}</TD>
                       <TD>
-                        <Badge variant={statusBadgeVariant(String((r as any).status ?? "")) as any}>
-                          {String((r as any).status ?? "-")}
+                        <Badge variant={statusBadgeVariant(String((c as any).status ?? "")) as any}>
+                          {String((c as any).status ?? "-")}
                         </Badge>
                       </TD>
-                      <TD>{formatDateTime(String((r as any).created_at ?? ""))}</TD>
+                      <TD>{formatDateTime(String((c as any).created_at ?? ""))}</TD>
                       <TD>
                         <Button asChild variant="outline" size="sm">
-                          <Link href={`/registrations/${r.id}`}>Detail</Link>
+                          <Link href={`/contacts/${c.id}`}>Detail</Link>
                         </Button>
                       </TD>
                     </TR>
@@ -172,9 +164,7 @@ function RegistrationsInner() {
           )}
 
           <div className="mt-4 flex items-center justify-between gap-2">
-            <div className="text-sm text-[var(--da-text-secondary)]">
-              Page {page}
-            </div>
+            <div className="text-sm text-[var(--da-text-secondary)]">Page {page}</div>
             <div className="flex gap-2">
               <Button
                 variant="outline"
@@ -199,7 +189,7 @@ function RegistrationsInner() {
   );
 }
 
-export default function RegistrationsPage() {
+export default function ContactsPage() {
   return (
     <Suspense
       fallback={
@@ -210,7 +200,7 @@ export default function RegistrationsPage() {
         </div>
       }
     >
-      <RegistrationsInner />
+      <ContactsInner />
     </Suspense>
   );
 }
