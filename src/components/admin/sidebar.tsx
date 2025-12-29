@@ -55,7 +55,10 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   ];
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-72 flex-col border-r border-[var(--da-glass-border)] bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 shadow-2xl">
+    <aside
+      className="flex h-full w-72 flex-col border-r border-white/10 shadow-2xl md:h-screen md:sticky md:top-0"
+      style={{ background: "var(--da-sidebar-bg)" }}
+    >
       {/* Header */}
       <div className="border-b border-white/10 bg-white/10 px-6 py-6 backdrop-blur-xl">
         <div className="flex items-center gap-3">
@@ -91,7 +94,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                   className={cn(
                     navBase,
                     active
-                      ? "bg-white text-indigo-600 shadow-lg"
+                      ? "bg-white/95 text-[var(--da-primary)] shadow-lg"
                       : "text-white/90 hover:bg-white/10 hover:text-white",
                   )}
                 >
@@ -100,7 +103,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                   </span>
                   <span className="flex-1">{it.label}</span>
                   {active && (
-                    <span className="h-2 w-2 rounded-full bg-indigo-600 animate-pulse" />
+                    <span className="h-2 w-2 rounded-full bg-[var(--da-primary)] animate-pulse" />
                   )}
                 </Link>
               );
