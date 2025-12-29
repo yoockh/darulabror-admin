@@ -70,11 +70,11 @@ export default function AdminLayout({
     <div className="min-h-screen bg-[var(--da-bg)]">
       <Topbar onOpenSidebar={() => setDrawerOpen(true)} />
 
-      <div className="flex">
-        <div className="hidden md:block">
+      <div className="md:grid md:grid-cols-[18rem_1fr]">
+        <div className="hidden md:block shrink-0">
           <Sidebar />
         </div>
-        <main className="min-w-0 flex-1 p-6 md:ml-72">{children}</main>
+        <main className="min-w-0 p-6">{children}</main>
       </div>
 
       {drawerOpen ? (

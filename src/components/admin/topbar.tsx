@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/auth-context";
 
@@ -68,6 +69,13 @@ export function Topbar({ onOpenSidebar }: { onOpenSidebar: () => void }) {
                 <div className="text-xs text-[var(--da-text-secondary)] mt-0.5">{admin?.email}</div>
               </div>
               <div className="p-2">
+                <Link
+                  className="block w-full rounded-lg px-3 py-2.5 text-left text-sm font-medium text-[var(--da-text-primary)] hover:bg-black/5 transition-colors"
+                  href="/profile"
+                  onClick={() => setOpen(false)}
+                >
+                  Profile
+                </Link>
                 <button
                   className="w-full rounded-lg px-3 py-2.5 text-left text-sm font-medium text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2"
                   onClick={() => {

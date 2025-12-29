@@ -50,7 +50,6 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
     { href: "/registrations", label: "Registrations", icon: "registrations" },
     { href: "/contacts", label: "Contacts", icon: "contacts" },
     { href: "/articles", label: "Articles", icon: "articles" },
-    { href: "/profile", label: "Profile", icon: "profile" },
     { href: "/admins", label: "Manage Admins", icon: "admins", superadminOnly: true },
   ];
 
