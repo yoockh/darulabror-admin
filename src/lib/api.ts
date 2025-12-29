@@ -1,6 +1,6 @@
-import { cookies } from "next/headers";
 import { getApiBaseUrl } from "@/lib/config";
-import { COOKIE_TOKEN } from "@/lib/cookies";
+import { clearToken, getToken } from "@/lib/token";
+import type { ApiEnvelope } from "@/lib/types";
 
 export class ApiError extends Error {
   status: number;
@@ -33,7 +33,7 @@ function buildUrl(path: string, query?: ApiFetchInit["query"]) {
 export async function apiFetch<T>(path: string, init: ApiFetchInit = {}) {
   const url = buildUrl(path, init.query);
 
-  const token = init.token ?? cookies().get(COOKIE_TOKEN)?.value;
+  const token = init.token ?? getToken() ?? undefined;
   const headers: Record<string, string> = {
     ...(init.headers ?? {}),
   };
@@ -53,6 +53,16 @@ export async function apiFetch<T>(path: string, init: ApiFetchInit = {}) {
   const isJson = contentType.includes("application/json");
   const payload = isJson ? await res.json().catch(() => null) : await res.text();
 
+
+  if (res.status === 401) {
+    // Auto logout + redirect
+    if (typeof window !== "undefined") {
+      clearToken();
+      window.location.href = "/login";
+    }
+    throw new ApiError("Unauthorized", 401, payload);
+  }
+
   if (!res.ok) {
     const message =
       (typeof payload === "object" && payload && "message" in payload
@@ -61,9 +71,14 @@ export async function apiFetch<T>(path: string, init: ApiFetchInit = {}) {
     throw new ApiError(message, res.status, payload);
   }
 
-  return payload as T;
-}
+  // Envelope handling: {status,message,data}
+  if (
+    payload &&
+    typeof payload === "object" &&
+    ("data" in (payload as any) || "message" in (payload as any) || "status" in (payload as any))
+  ) {
+    return (payload as ApiEnvelope<T>).data as T;
+  }
 
-export function getTokenFromCookies() {
-  return cookies().get(COOKIE_TOKEN)?.value;
+  return payload as T;
 }
