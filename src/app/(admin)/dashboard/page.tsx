@@ -1,11 +1,42 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
 import { listContacts, listRegistrations } from "@/lib/api/endpoints";
 import { unwrapPaginated } from "@/lib/paginated";
 import type { ContactDTO, RegistrationDTO } from "@/lib/types";
+
+function StatCard({
+  title,
+  value,
+  href,
+  variant,
+}: {
+  title: string;
+  value: number;
+  href: string;
+  variant: "default" | "warning" | "success";
+}) {
+  return (
+    <Link href={href} className="block">
+      <Card className="hover:cursor-pointer">
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between gap-2">
+            <span>{title}</span>
+            <Badge variant={variant as any}>{title.toLowerCase()}</Badge>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-3xl font-semibold text-[var(--da-text-primary)]">{value}</div>
+          <div className="mt-1 text-sm text-[var(--da-text-secondary)]">Klik untuk lihat list</div>
+        </CardContent>
+      </Card>
+    </Link>
+  );
+}
 
 export default function DashboardPage() {
   const [loading, setLoading] = React.useState(true);
@@ -62,46 +93,35 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Registrations (limit 100)</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {loading ? (
+        {loading ? (
+          <Card>
+            <CardHeader>
+              <CardTitle>Ringkasan</CardTitle>
+            </CardHeader>
+            <CardContent>
               <div className="space-y-2">
-                <Skeleton className="h-4 w-40" />
+                <Skeleton className="h-10 w-24" />
                 <Skeleton className="h-4 w-56" />
               </div>
-            ) : (
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                <div>new: {regCounts.new ?? 0}</div>
-                <div>validate: {regCounts.validate ?? 0}</div>
-                <div>process: {regCounts.process ?? 0}</div>
-                <div>done: {regCounts.done ?? 0}</div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Contacts (limit 100)</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {loading ? (
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-40" />
-                <Skeleton className="h-4 w-56" />
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                <div>new: {contactCounts.new ?? 0}</div>
-                <div>in_progress: {contactCounts.in_progress ?? 0}</div>
-                <div>done: {contactCounts.done ?? 0}</div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid gap-4 md:col-span-2 md:grid-cols-4">
+            <StatCard title="New" value={regCounts.new ?? 0} href="/registrations?status=new" variant="default" />
+            <StatCard title="Validate" value={regCounts.validate ?? 0} href="/registrations?status=validate" variant="warning" />
+            <StatCard title="Process" value={regCounts.process ?? 0} href="/registrations?status=process" variant="warning" />
+            <StatCard title="Done" value={regCounts.done ?? 0} href="/registrations?status=done" variant="success" />
+          </div>
+        )}
       </div>
+
+      {loading ? null : (
+        <div className="grid gap-4 md:grid-cols-3">
+          <StatCard title="Contact New" value={contactCounts.new ?? 0} href="/contacts?status=new" variant="default" />
+          <StatCard title="Contact In Progress" value={contactCounts.in_progress ?? 0} href="/contacts?status=in_progress" variant="warning" />
+          <StatCard title="Contact Done" value={contactCounts.done ?? 0} href="/contacts?status=done" variant="success" />
+        </div>
+      )}
 
       <div className="grid gap-4 md:grid-cols-2">
         <Card>

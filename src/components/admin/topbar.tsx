@@ -22,7 +22,7 @@ export function Topbar({ onOpenSidebar }: { onOpenSidebar: () => void }) {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <header className="sticky top-0 z-20 border-b border-[var(--da-border)] bg-white">
+    <header className="sticky top-0 z-20 border-b border-[var(--da-glass-border)] bg-[var(--da-glass-bg-strong)] backdrop-blur-xl">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-6 py-3">
         <div className="flex items-center gap-2">
           <Button
@@ -50,7 +50,7 @@ export function Topbar({ onOpenSidebar }: { onOpenSidebar: () => void }) {
           </Button>
 
           {open ? (
-            <div className="absolute right-0 mt-2 w-56 rounded-md border border-[var(--da-border)] bg-white p-2 shadow-[var(--da-card-shadow)]">
+            <div className="absolute right-0 mt-2 w-56 rounded-xl border border-[var(--da-glass-border)] bg-[var(--da-glass-bg-strong)] p-2 shadow-[var(--da-glass-shadow)] backdrop-blur-xl">
               <button
                 className="w-full rounded-md px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50"
                 onClick={() => {

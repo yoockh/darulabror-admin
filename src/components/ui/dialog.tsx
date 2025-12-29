@@ -29,7 +29,7 @@ export function Dialog({
     <dialog
       ref={ref}
       className={cn(
-        "w-full max-w-lg rounded-lg border border-[var(--da-border)] bg-white p-0 shadow-[var(--da-hover-shadow)]",
+        "w-full max-w-lg rounded-xl border border-[var(--da-glass-border)] bg-[var(--da-glass-bg-strong)] p-0 shadow-[var(--da-hover-shadow)] backdrop-blur-xl",
         className,
       )}
       onClose={() => onOpenChange(false)}
@@ -38,7 +38,7 @@ export function Dialog({
         onOpenChange(false);
       }}
     >
-      <div className="border-b border-[var(--da-border)] px-5 py-4">
+      <div className="border-b border-[var(--da-glass-border)] px-5 py-4">
         <div className="text-sm font-semibold text-[var(--da-text-primary)]">{title}</div>
       </div>
       <div className="px-5 py-4">{children}</div>

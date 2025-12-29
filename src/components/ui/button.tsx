@@ -11,15 +11,15 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const base =
-  "inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--da-accent)] disabled:opacity-50 disabled:pointer-events-none";
+  "inline-flex items-center justify-center rounded-xl font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--da-accent)] disabled:opacity-50 disabled:pointer-events-none";
 
 const variants: Record<ButtonVariant, string> = {
   primary:
-    "bg-[var(--da-green)] text-white hover:bg-[var(--da-green-2)]",
+    "bg-[var(--da-green)] text-white shadow-[var(--da-card-shadow)] hover:bg-[var(--da-green-2)] hover:shadow-[var(--da-hover-shadow)]",
   secondary:
-    "bg-[var(--da-bg)] text-[var(--da-text-primary)] border border-[var(--da-border)] hover:bg-white",
+    "bg-white/50 text-[var(--da-text-primary)] border border-[var(--da-glass-border)] backdrop-blur-xl hover:bg-white/70",
   outline:
-    "bg-transparent text-[var(--da-text-primary)] border border-[var(--da-border)] hover:bg-[var(--da-bg)]",
+    "bg-white/30 text-[var(--da-text-primary)] border border-[var(--da-glass-border)] backdrop-blur-xl hover:bg-white/60",
   danger: "bg-red-600 text-white hover:bg-red-700",
 };
 

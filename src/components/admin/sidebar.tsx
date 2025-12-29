@@ -22,7 +22,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   ];
 
   return (
-    <aside className="h-full w-64 flex-col border-r border-[var(--da-border)] bg-white">
+    <aside className="h-full w-64 flex-col border-r border-[var(--da-glass-border)] bg-[var(--da-glass-bg-strong)] backdrop-blur-xl">
       <div className="px-5 py-4">
         <div className="text-sm font-semibold text-[var(--da-green)]">Darul Abror Admin</div>
         <div className="mt-1 text-xs text-[var(--da-text-secondary)]">Role: {role ?? "-"}</div>

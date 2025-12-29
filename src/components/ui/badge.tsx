@@ -4,10 +4,13 @@ import { cn } from "@/lib/utils";
 type BadgeVariant = "default" | "success" | "warning" | "danger";
 
 const variants: Record<BadgeVariant, string> = {
-  default: "bg-[var(--da-bg)] text-[var(--da-text-primary)] border-[var(--da-border)]",
-  success: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  warning: "bg-amber-50 text-amber-700 border-amber-200",
-  danger: "bg-red-50 text-red-700 border-red-200",
+  default:
+    "bg-white/50 text-[var(--da-text-primary)] border-[var(--da-glass-border)] backdrop-blur-xl",
+  success:
+    "bg-emerald-500/10 text-emerald-800 border-emerald-500/20 backdrop-blur-xl",
+  warning:
+    "bg-amber-500/10 text-amber-800 border-amber-500/20 backdrop-blur-xl",
+  danger: "bg-red-500/10 text-red-700 border-red-500/20 backdrop-blur-xl",
 };
 
 export function Badge({

@@ -8,10 +8,11 @@ export function Toaster() {
       position="top-right"
       toastOptions={{
         style: {
-          background: "white",
-          border: "1px solid var(--da-border)",
+          background: "var(--da-glass-bg-strong)",
+          border: "1px solid var(--da-glass-border)",
           color: "var(--da-text-primary)",
-          boxShadow: "var(--da-card-shadow)",
+          boxShadow: "var(--da-glass-shadow)",
+          backdropFilter: "blur(16px)",
         },
       }}
     />
