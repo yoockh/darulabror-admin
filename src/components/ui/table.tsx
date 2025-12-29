@@ -39,7 +39,7 @@ export function TR({
   return (
     <tr
       className={cn(
-        "border-b border-[var(--da-border)] transition-colors hover:bg-white/50",
+        "border-b border-[var(--da-border)] transition-colors hover:bg-white/5",
         className,
       )}
       {...props}

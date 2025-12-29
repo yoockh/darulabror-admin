@@ -63,21 +63,21 @@ export function Topbar({ onOpenSidebar }: { onOpenSidebar: () => void }) {
           </button>
 
           {open ? (
-            <div className="absolute right-0 mt-2 w-56 rounded-xl border border-[var(--da-glass-border)] bg-white shadow-xl backdrop-blur-xl animate-in fade-in slide-in-from-top-2 duration-200">
-              <div className="p-3 border-b border-gray-100">
+            <div className="absolute right-0 mt-2 w-56 overflow-hidden rounded-xl border border-[var(--da-glass-border)] bg-[var(--da-glass-bg-strong)] shadow-[var(--da-glass-shadow)] backdrop-blur-xl animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="p-3 border-b border-[var(--da-glass-border)]">
                 <div className="text-sm font-semibold text-[var(--da-text-primary)]">{admin?.username ?? admin?.email}</div>
                 <div className="text-xs text-[var(--da-text-secondary)] mt-0.5">{admin?.email}</div>
               </div>
               <div className="p-2">
                 <Link
-                  className="block w-full rounded-lg px-3 py-2.5 text-left text-sm font-medium text-[var(--da-text-primary)] hover:bg-black/5 transition-colors"
+                  className="block w-full rounded-lg px-3 py-2.5 text-left text-sm font-medium text-[var(--da-text-primary)] hover:bg-white/5 transition-colors"
                   href="/profile"
                   onClick={() => setOpen(false)}
                 >
                   Profile
                 </Link>
                 <button
-                  className="w-full rounded-lg px-3 py-2.5 text-left text-sm font-medium text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2"
+                  className="w-full rounded-lg px-3 py-2.5 text-left text-sm font-medium text-red-300 hover:bg-red-500/10 transition-colors flex items-center gap-2"
                   onClick={() => {
                     setOpen(false);
                     logout();

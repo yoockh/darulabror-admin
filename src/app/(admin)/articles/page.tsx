@@ -16,12 +16,19 @@ import { Table, TBody, THead, TR, TH, TD, TableEmptyState } from "@/components/u
 import { deleteArticle, listArticles } from "@/lib/api/endpoints";
 import { unwrapPaginated } from "@/lib/paginated";
 import { formatDateTime } from "@/lib/format";
+import { articleStatusLabel } from "@/lib/status";
 import type { ArticleDTO, ArticleStatus } from "@/lib/types";
 
 function statusBadgeVariant(status?: string) {
   if (status === "published") return "success";
   if (status === "draft") return "warning";
   return "default";
+}
+
+function getArticleId(a: any): string | number | null {
+  const id = a?.id ?? a?.article_id ?? a?.articleId;
+  if (id === undefined || id === null || id === "") return null;
+  return id;
 }
 
 function ArticlesInner() {
@@ -100,9 +107,9 @@ function ArticlesInner() {
             <div className="space-y-1">
               <label className="text-sm font-medium">Status</label>
               <Select value={status} onChange={(e) => setParam("status", e.target.value)}>
-                <option value="all">All</option>
-                <option value="draft">draft</option>
-                <option value="published">published</option>
+                <option value="all">Semua</option>
+                <option value="draft">{articleStatusLabel("draft")}</option>
+                <option value="published">{articleStatusLabel("published")}</option>
               </Select>
             </div>
             <div className="space-y-1 md:col-span-2">
@@ -143,19 +150,29 @@ function ArticlesInner() {
                 {filtered.length === 0 ? (
                   <TableEmptyState colSpan={5} title="Belum ada artikel" />
                 ) : (
-                  filtered.map((a) => (
-                    <TR key={String(a.id)}>
+                  filtered.map((a, idx) => {
+                    const articleId = getArticleId(a);
+                    return (
+                    <TR key={String(articleId ?? `${a.title ?? "row"}-${idx}`)}>
                       <TD className="font-medium">{a.title}</TD>
                       <TD>{a.author}</TD>
                       <TD>
-                        <Badge variant={statusBadgeVariant(a.status) as any}>{a.status}</Badge>
+                        <Badge variant={statusBadgeVariant(a.status) as any}>
+                          {articleStatusLabel(String(a.status ?? ""))}
+                        </Badge>
                       </TD>
                       <TD>{formatDateTime(String(a.updated_at ?? a.created_at ?? ""))}</TD>
                       <TD>
                         <div className="flex flex-wrap gap-2">
-                          <Button asChild variant="outline" size="sm">
-                            <Link href={`/articles/${a.id}`}>Edit</Link>
-                          </Button>
+                          {articleId ? (
+                            <Button asChild variant="outline" size="sm">
+                              <Link href={`/articles/${articleId}`}>Edit</Link>
+                            </Button>
+                          ) : (
+                            <Button variant="outline" size="sm" disabled>
+                              Edit
+                            </Button>
+                          )}
                           <Button
                             variant="danger"
                             size="sm"
@@ -169,7 +186,8 @@ function ArticlesInner() {
                         </div>
                       </TD>
                     </TR>
-                  ))
+                    );
+                  })}
                 )}
               </TBody>
             </Table>
@@ -210,10 +228,17 @@ function ArticlesInner() {
               onClick={async () => {
                 if (!selected) return;
                 setDeleting(true);
-                const id = selected.id;
+                const id = getArticleId(selected as any);
                 const prev = rows;
-                setRows((list) => list.filter((x) => x.id !== id));
+                if (id) {
+                  setRows((list) =>
+                    list.filter((x) => getArticleId(x as any) !== id),
+                  );
+                }
                 try {
+                  if (!id) {
+                    throw new Error("ID artikel tidak valid.");
+                  }
                   await deleteArticle(id);
                   toast.success("Artikel dihapus.");
                   setDeleteOpen(false);

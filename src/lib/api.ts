@@ -20,14 +20,23 @@ type ApiFetchInit = Omit<RequestInit, "headers"> & {
 };
 
 function buildUrl(path: string, query?: ApiFetchInit["query"]) {
-  const url = new URL(path, getApiBaseUrl());
+  const backendUrl = new URL(path, getApiBaseUrl());
   if (query) {
     for (const [key, value] of Object.entries(query)) {
       if (value === undefined || value === null) continue;
-      url.searchParams.set(key, String(value));
+      backendUrl.searchParams.set(key, String(value));
     }
   }
-  return url;
+
+  // In browser: use same-origin proxy to avoid CORS/preflight issues
+  if (typeof window !== "undefined") {
+    const origin = window.location.origin;
+    if (backendUrl.origin !== origin) {
+      return new URL(`/api/proxy${backendUrl.pathname}${backendUrl.search}`, origin);
+    }
+  }
+
+  return backendUrl;
 }
 
 export async function apiFetch<T>(path: string, init: ApiFetchInit = {}) {
