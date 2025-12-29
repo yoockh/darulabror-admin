@@ -68,3 +68,30 @@ export function TD({
 }: React.TdHTMLAttributes<HTMLTableCellElement>) {
   return <td className={cn("p-4 align-middle", className)} {...props} />;
 }
+
+export function TableEmptyState({
+  colSpan,
+  title = "Belum ada data",
+  description,
+  action,
+}: {
+  colSpan: number;
+  title?: string;
+  description?: string;
+  action?: React.ReactNode;
+}) {
+  return (
+    <TR>
+      <TD colSpan={colSpan}>
+        <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
+          <div className="text-sm font-medium text-[var(--da-text-primary)]">{title}</div>
+          {description ? (
+            <div className="text-sm text-[var(--da-text-secondary)]">{description}</div>
+          ) : null}
+          {action ? <div className="pt-1">{action}</div> : null}
+        </div>
+      </TD>
+    </TR>
+  );
+}
+

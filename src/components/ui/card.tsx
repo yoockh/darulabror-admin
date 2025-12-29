@@ -8,7 +8,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-lg border border-[var(--da-border)] bg-white shadow-[var(--da-card-shadow)]",
+        "rounded-lg border border-[var(--da-border)] bg-white shadow-[var(--da-card-shadow)] transition-shadow hover:shadow-[var(--da-hover-shadow)]",
         className,
       )}
       {...props}

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
+type ButtonVariant = "primary" | "secondary" | "outline" | "danger";
 type ButtonSize = "sm" | "md";
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -16,9 +16,9 @@ const variants: Record<ButtonVariant, string> = {
   primary:
     "bg-[var(--da-green)] text-white hover:bg-[var(--da-green-2)]",
   secondary:
-    "bg-white text-[var(--da-text-primary)] border border-[var(--da-border)] hover:bg-[var(--da-bg)]",
-  ghost:
-    "bg-transparent text-[var(--da-text-primary)] hover:bg-[var(--da-bg)]",
+    "bg-[var(--da-bg)] text-[var(--da-text-primary)] border border-[var(--da-border)] hover:bg-white",
+  outline:
+    "bg-transparent text-[var(--da-text-primary)] border border-[var(--da-border)] hover:bg-[var(--da-bg)]",
   danger: "bg-red-600 text-white hover:bg-red-700",
 };
 
