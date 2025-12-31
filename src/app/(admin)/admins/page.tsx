@@ -32,6 +32,10 @@ function canDeleteAdminRow(a: AdminDTO | null | undefined) {
   return (a?.role ?? null) === "admin";
 }
 
+function canEditAdminRow(a: AdminDTO | null | undefined) {
+  return (a?.role ?? null) === "admin";
+}
+
 type AdminFormState = {
   username: string;
   email: string;
@@ -202,6 +206,7 @@ export default function AdminsPage() {
   }
 
   const canDeleteSelected = canDeleteAdminRow(selected);
+  const canEditSelected = canEditAdminRow(selected);
 
   return (
     <div className="space-y-4">
@@ -286,23 +291,25 @@ export default function AdminsPage() {
                       <TD>{formatDateTime(a.created_at)}</TD>
                       <TD>
                         <div className="flex flex-wrap gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setSelected(a);
-                              setForm({
-                                username: a.username,
-                                email: a.email,
-                                role: a.role,
-                                password: "",
-                                is_active: a.is_active,
-                              });
-                              setEditOpen(true);
-                            }}
-                          >
-                            Edit
-                          </Button>
+                          {canEditAdminRow(a) ? (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setSelected(a);
+                                setForm({
+                                  username: a.username,
+                                  email: a.email,
+                                  role: a.role,
+                                  password: "",
+                                  is_active: a.is_active,
+                                });
+                                setEditOpen(true);
+                              }}
+                            >
+                              Edit
+                            </Button>
+                          ) : null}
                           {canDeleteAdminRow(a) ? (
                             <Button
                               variant="danger"
@@ -414,12 +421,18 @@ export default function AdminsPage() {
 
       <Dialog open={editOpen} onOpenChange={setEditOpen} title="Edit Admin">
         <div className="space-y-3">
+          {!canEditSelected ? (
+            <div className="text-sm text-[var(--da-text-secondary)]">
+              Akun superadmin tidak bisa diedit.
+            </div>
+          ) : null}
           <div className="space-y-1">
             <label className="text-sm font-medium text-[var(--da-text-primary)]">Username</label>
             <Input
               value={form.username}
               onChange={(e) => setForm((s) => ({ ...s, username: e.target.value }))}
               placeholder="username"
+              disabled={!canEditSelected}
             />
           </div>
           <div className="space-y-1">
@@ -429,6 +442,7 @@ export default function AdminsPage() {
               onChange={(e) => setForm((s) => ({ ...s, email: e.target.value }))}
               placeholder="email"
               type="email"
+              disabled={!canEditSelected}
             />
           </div>
           <div className="grid gap-3 md:grid-cols-2">
@@ -437,6 +451,7 @@ export default function AdminsPage() {
               <Select
                 value={form.role}
                 onChange={(e) => setForm((s) => ({ ...s, role: e.target.value as Role }))}
+                disabled={!canEditSelected}
               >
                 <option value="admin">admin</option>
                 <option value="superadmin">superadmin</option>
@@ -447,6 +462,7 @@ export default function AdminsPage() {
               <Select
                 value={form.is_active ? "active" : "inactive"}
                 onChange={(e) => setForm((s) => ({ ...s, is_active: e.target.value === "active" }))}
+                disabled={!canEditSelected}
               >
                 <option value="active">active</option>
                 <option value="inactive">inactive</option>
@@ -467,9 +483,13 @@ export default function AdminsPage() {
             <Button
               variant="primary"
               className="w-full"
-              disabled={saving || !selected}
+              disabled={saving || !selected || !canEditSelected}
               onClick={async () => {
                 if (!selected) return;
+                if (!canEditSelected) {
+                  toast.error("Superadmin tidak bisa diedit.");
+                  return;
+                }
                 if (!form.username || !form.email) {
                   toast.error("Username dan email wajib.");
                   return;
