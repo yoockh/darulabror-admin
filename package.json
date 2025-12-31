@@ -29,6 +29,8 @@
       ".next/**/*",
       "public/**/*",
       "next.config.mjs",
+      "src/app/**/*",
+      "src/pages/**/*",
       "package.json",
       "node_modules/**/*"
     ],

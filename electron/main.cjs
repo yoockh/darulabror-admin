@@ -2,6 +2,13 @@ const { app, BrowserWindow, dialog } = require("electron");
 const path = require("path");
 const http = require("http");
 
+// Reduce noisy VA-API/GPU initialization failures on some Linux machines.
+if (process.platform === "linux") {
+  process.env.LIBVA_DRIVER_NAME = process.env.LIBVA_DRIVER_NAME || "dummy";
+  app.commandLine.appendSwitch("disable-gpu");
+  app.commandLine.appendSwitch("disable-features", "VaapiVideoDecoder");
+}
+
 let autoUpdater = null;
 
 function getAutoUpdater() {
@@ -16,6 +23,9 @@ function getAutoUpdater() {
 }
 
 function isDev() {
+  // Packaged builds must behave like production regardless of NODE_ENV
+  // to avoid Next.js trying to create dev-only directories inside the read-only AppImage.
+  if (app.isPackaged) return false;
   return process.env.NODE_ENV !== "production";
 }
 
@@ -180,6 +190,13 @@ async function boot() {
   // Disabling HW acceleration avoids the noisy error and improves compatibility.
   if (process.platform === "linux") {
     app.disableHardwareAcceleration();
+  }
+
+  // In packaged apps, Electron does not always set NODE_ENV=production.
+  // Next uses this flag and may try to create dev directories under the app bundle.
+  if (app.isPackaged) {
+    process.env.NODE_ENV = "production";
+    process.env.NEXT_TELEMETRY_DISABLED = "1";
   }
 
   await app.whenReady();
