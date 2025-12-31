@@ -78,14 +78,25 @@ jobs:
           echo "Release dir contents:" 
           ls -la release || true
 
-      - name: Upload artifacts to GitHub Release
+      - name: Upload Linux artifacts to GitHub Release
+        if: runner.os == 'Linux'
         uses: softprops/action-gh-release@v2
         with:
           fail_on_unmatched_files: true
           files: |
             release/*.AppImage
+            release/latest-linux.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Windows artifacts to GitHub Release
+        if: runner.os == 'Windows'
+        uses: softprops/action-gh-release@v2
+        with:
+          fail_on_unmatched_files: true
+          files: |
             release/*.exe
-            release/latest*.yml
+            release/latest.yml
             release/*.blockmap
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
