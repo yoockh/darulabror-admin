@@ -28,6 +28,10 @@ function roleBadgeVariant(role?: string) {
   return "default";
 }
 
+function canDeleteAdminRow(a: AdminDTO | null | undefined) {
+  return (a?.role ?? null) === "admin";
+}
+
 type AdminFormState = {
   username: string;
   email: string;
@@ -197,6 +201,8 @@ export default function AdminsPage() {
     return <AccessDenied />;
   }
 
+  const canDeleteSelected = canDeleteAdminRow(selected);
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
@@ -297,16 +303,18 @@ export default function AdminsPage() {
                           >
                             Edit
                           </Button>
-                          <Button
-                            variant="danger"
-                            size="sm"
-                            onClick={() => {
-                              setSelected(a);
-                              setDeleteOpen(true);
-                            }}
-                          >
-                            Delete
-                          </Button>
+                          {canDeleteAdminRow(a) ? (
+                            <Button
+                              variant="danger"
+                              size="sm"
+                              onClick={() => {
+                                setSelected(a);
+                                setDeleteOpen(true);
+                              }}
+                            >
+                              Delete
+                            </Button>
+                          ) : null}
                         </div>
                       </TD>
                     </TR>
@@ -505,6 +513,11 @@ export default function AdminsPage() {
           <div className="text-sm text-[var(--da-text-secondary)]">
             Anda yakin ingin menghapus <span className="font-medium text-[var(--da-text-primary)]">{selected?.email}</span>?
           </div>
+          {!canDeleteSelected ? (
+            <div className="text-sm text-[var(--da-text-secondary)]">
+              Akun superadmin tidak bisa dihapus.
+            </div>
+          ) : null}
           <div className="flex gap-2">
             <Button variant="outline" className="w-full" onClick={() => setDeleteOpen(false)}>
               Batal
@@ -512,9 +525,13 @@ export default function AdminsPage() {
             <Button
               variant="danger"
               className="w-full"
-              disabled={saving || !selected}
+              disabled={saving || !selected || !canDeleteSelected}
               onClick={async () => {
                 if (!selected) return;
+                if (!canDeleteSelected) {
+                  toast.error("Superadmin tidak bisa dihapus.");
+                  return;
+                }
                 setSaving(true);
                 const id = selected.id;
                 const prev = rows;
