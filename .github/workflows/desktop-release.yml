@@ -56,8 +56,6 @@ jobs:
 
       - name: Build desktop artifacts
         shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Force app version to match the tag so GitHub Releases assets + latest*.yml
           # are generated for the correct version (required for auto-update).
@@ -68,16 +66,10 @@ jobs:
             exit 1
           fi
 
-          if [ "${{ github.ref_type }}" = "tag" ]; then
-            PUBLISH_FLAG="--publish always"
-          else
-            PUBLISH_FLAG="--publish never"
-          fi
-
           if [ "${{ runner.os }}" = "Linux" ]; then
-            npx electron-builder --linux $PUBLISH_FLAG --config.extraMetadata.version="$TAG_VERSION"
+            npx electron-builder --linux --publish never --config.extraMetadata.version="$TAG_VERSION"
           else
-            npx electron-builder --win $PUBLISH_FLAG --config.extraMetadata.version="$TAG_VERSION"
+            npx electron-builder --win --publish never --config.extraMetadata.version="$TAG_VERSION"
           fi
 
       - name: List release outputs
@@ -86,6 +78,14 @@ jobs:
           echo "Release dir contents:" 
           ls -la release || true
 
-      # NOTE: Publishing to GitHub Releases is handled by electron-builder itself.
-      # This is required for auto-update (electron-updater) because it uploads
-      # metadata files (latest*.yml and blockmaps) alongside installers.
+      - name: Upload artifacts to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          fail_on_unmatched_files: true
+          files: |
+            release/*.AppImage
+            release/*.exe
+            release/latest*.yml
+            release/*.blockmap
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
