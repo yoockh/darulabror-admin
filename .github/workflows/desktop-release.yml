@@ -39,12 +39,9 @@ jobs:
 
       - name: Set build-time env
         env:
-          API_BASE_VAR: ${{ vars.NEXT_PUBLIC_API_BASE_URL }}
-          API_BASE_SECRET: ${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
+          API_BASE: ${{ vars.NEXT_PUBLIC_API_BASE_URL }}
         shell: bash
         run: |
-          API_BASE="$API_BASE_VAR"
-          if [ -z "$API_BASE" ]; then API_BASE="$API_BASE_SECRET"; fi
           if [ -z "$API_BASE" ]; then
             echo "Missing NEXT_PUBLIC_API_BASE_URL. Set it in Repo Variables (recommended) or Secrets."
             exit 1
@@ -72,11 +69,20 @@ jobs:
           echo "Release dir contents:" 
           ls -la release || true
 
-      - name: Upload installers to GitHub Release
+      - name: Upload Linux installer to GitHub Release
+        if: runner.os == 'Linux'
         uses: softprops/action-gh-release@v2
         with:
           files: |
             release/*.AppImage
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Windows installer to GitHub Release
+        if: runner.os == 'Windows'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
             release/*.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
