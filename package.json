@@ -28,7 +28,7 @@
       "electron/**/*",
       ".next/**/*",
       "public/**/*",
-      "next.config.*",
+      "next.config.mjs",
       "package.json",
       "node_modules/**/*"
     ],

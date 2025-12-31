@@ -176,6 +176,12 @@ async function boot() {
     app.setAppUserModelId("com.darultech.darulabroradmin");
   }
 
+  // Some Linux environments log VA-API driver errors (libva) on startup.
+  // Disabling HW acceleration avoids the noisy error and improves compatibility.
+  if (process.platform === "linux") {
+    app.disableHardwareAcceleration();
+  }
+
   await app.whenReady();
 
   const port = await findAvailablePort();
