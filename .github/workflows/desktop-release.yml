@@ -59,6 +59,15 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # Force app version to match the tag so GitHub Releases assets + latest*.yml
+          # are generated for the correct version (required for auto-update).
+          TAG_NAME="${GITHUB_REF_NAME:-}"
+          TAG_VERSION="${TAG_NAME#v}"
+          if [ -z "$TAG_NAME" ] || [ "$TAG_VERSION" = "$TAG_NAME" ]; then
+            echo "Expected a tag like v0.1.4, got '$TAG_NAME'"
+            exit 1
+          fi
+
           if [ "${{ github.ref_type }}" = "tag" ]; then
             PUBLISH_FLAG="--publish always"
           else
@@ -66,9 +75,9 @@ jobs:
           fi
 
           if [ "${{ runner.os }}" = "Linux" ]; then
-            npx electron-builder --linux $PUBLISH_FLAG
+            npx electron-builder --linux $PUBLISH_FLAG --config.extraMetadata.version="$TAG_VERSION"
           else
-            npx electron-builder --win $PUBLISH_FLAG
+            npx electron-builder --win $PUBLISH_FLAG --config.extraMetadata.version="$TAG_VERSION"
           fi
 
       - name: List release outputs
