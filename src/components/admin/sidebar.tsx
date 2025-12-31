@@ -55,25 +55,30 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
 
   return (
     <aside
-      className="flex h-full w-72 flex-col border-r border-white/10 shadow-2xl md:h-screen md:sticky md:top-0"
+      className="flex h-full w-72 flex-col border-r border-[var(--da-sidebar-border)] shadow-2xl md:h-screen md:sticky md:top-0"
       style={{ background: "var(--da-sidebar-bg)" }}
     >
       {/* Header */}
-      <div className="border-b border-white/10 bg-white/10 px-6 py-6 backdrop-blur-xl">
+      <div className="border-b border-[var(--da-sidebar-border)] bg-[var(--da-sidebar-header-bg)] px-6 py-6 backdrop-blur-xl">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
-            <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--da-sidebar-brand-icon-bg)] backdrop-blur-sm">
+            <svg
+              className="h-6 w-6 text-[var(--da-sidebar-header-text)]"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
             </svg>
           </div>
           <div>
-            <div className="text-base font-bold text-white">Darul Abror</div>
-            <div className="text-xs text-white/70">Admin Panel</div>
+            <div className="text-base font-bold text-[var(--da-sidebar-header-text)]">Darul Abror</div>
+            <div className="text-xs text-[var(--da-sidebar-header-muted)]">Admin Panel</div>
           </div>
         </div>
-        <div className="mt-4 rounded-lg bg-white/10 px-3 py-2 backdrop-blur-sm">
-          <div className="text-xs font-medium text-white/60">Role</div>
-          <div className="text-sm font-semibold text-white">{role ?? "-"}</div>
+        <div className="mt-4 rounded-lg bg-[var(--da-sidebar-role-bg)] px-3 py-2 backdrop-blur-sm">
+          <div className="text-xs font-medium text-[var(--da-sidebar-header-muted)]">Role</div>
+          <div className="text-sm font-semibold text-[var(--da-sidebar-header-text)]">{role ?? "-"}</div>
         </div>
       </div>
 
@@ -93,8 +98,8 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                   className={cn(
                     navBase,
                     active
-                      ? "bg-white/95 text-[var(--da-primary)] shadow-lg"
-                      : "text-white/90 hover:bg-white/10 hover:text-white",
+                      ? "bg-[var(--da-nav-active-bg)] text-[var(--da-nav-active-text)] shadow-lg"
+                      : "text-[var(--da-nav-text)] hover:bg-[var(--da-nav-hover-bg)] hover:text-[var(--da-nav-hover-text)]",
                   )}
                 >
                   <span className={cn("transition-transform duration-200", active && "scale-110")}>
@@ -102,7 +107,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                   </span>
                   <span className="flex-1">{it.label}</span>
                   {active && (
-                    <span className="h-2 w-2 rounded-full bg-[var(--da-primary)] animate-pulse" />
+                    <span className="h-2 w-2 rounded-full bg-[var(--da-nav-active-dot)] animate-pulse" />
                   )}
                 </Link>
               );
@@ -111,8 +116,8 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-white/10 bg-white/5 px-6 py-4 backdrop-blur-xl">
-        <div className="text-xs text-white/50 text-center">
+      <div className="border-t border-[var(--da-sidebar-border)] bg-[var(--da-sidebar-footer-bg)] px-6 py-4 backdrop-blur-xl">
+        <div className="text-xs text-[var(--da-sidebar-footer-text)] text-center">
           © 2025 Darul Abror
         </div>
       </div>

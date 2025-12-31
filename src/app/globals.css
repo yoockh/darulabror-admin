@@ -27,6 +27,28 @@ html[data-theme="dark"] {
   --da-sidebar-bg: var(--da-surface);
   --da-on-chrome: #ffffff;
 
+    --da-header-border: rgba(255, 255, 255, 0.10);
+    --da-sidebar-border: rgba(255, 255, 255, 0.10);
+
+    /* Sidebar header section */
+    --da-sidebar-header-bg: rgba(255, 255, 255, 0.10);
+    --da-sidebar-header-text: #ffffff;
+    --da-sidebar-header-muted: rgba(255, 255, 255, 0.70);
+    --da-sidebar-brand-icon-bg: rgba(255, 255, 255, 0.20);
+    --da-sidebar-role-bg: rgba(255, 255, 255, 0.10);
+
+    /* Sidebar nav */
+    --da-nav-text: rgba(255, 255, 255, 0.90);
+    --da-nav-hover-bg: rgba(255, 255, 255, 0.10);
+    --da-nav-hover-text: #ffffff;
+    --da-nav-active-bg: rgba(16, 185, 129, 0.22);
+    --da-nav-active-text: #ffffff;
+    --da-nav-active-dot: var(--da-primary);
+
+    /* Sidebar footer */
+    --da-sidebar-footer-bg: rgba(255, 255, 255, 0.05);
+    --da-sidebar-footer-text: rgba(255, 255, 255, 0.50);
+
     /* Chrome controls (Topbar buttons, muted text) */
     --da-chrome-btn-bg: rgba(255, 255, 255, 0.20);
     --da-chrome-btn-border: rgba(255, 255, 255, 0.30);
@@ -60,9 +82,31 @@ html[data-theme="light"] {
   --da-hover-shadow: 0 18px 45px rgba(15, 23, 42, 0.10);
   --da-card-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
 
-  --da-header-bg: #ffffff;
+  /* Header should be green in light mode */
+  --da-header-bg: var(--da-primary);
+  --da-on-chrome: #ffffff;
+
+  --da-header-border: rgba(255, 255, 255, 0.24);
+  --da-sidebar-border: rgba(15, 23, 42, 0.12);
+
+  /* Sidebar header section: soft green with white text */
   --da-sidebar-bg: #ffffff;
-  --da-on-chrome: var(--da-text-primary);
+  --da-sidebar-header-bg: rgba(16, 185, 129, 0.85);
+  --da-sidebar-header-text: #ffffff;
+  --da-sidebar-header-muted: rgba(255, 255, 255, 0.80);
+  --da-sidebar-brand-icon-bg: rgba(255, 255, 255, 0.22);
+  --da-sidebar-role-bg: rgba(255, 255, 255, 0.18);
+
+  /* Sidebar nav: dark text/icons, emerald hover/active */
+  --da-nav-text: var(--da-text-primary);
+  --da-nav-hover-bg: rgba(16, 185, 129, 0.12);
+  --da-nav-hover-text: var(--da-text-primary);
+  --da-nav-active-bg: rgba(16, 185, 129, 0.18);
+  --da-nav-active-text: var(--da-text-primary);
+  --da-nav-active-dot: var(--da-primary);
+
+  --da-sidebar-footer-bg: rgba(15, 23, 42, 0.03);
+  --da-sidebar-footer-text: rgba(15, 23, 42, 0.55);
 
   --da-glass-bg: rgba(255, 255, 255, 0.82);
   --da-glass-bg-strong: rgba(255, 255, 255, 0.92);
