@@ -17,8 +17,8 @@ export const metadata: Metadata = {
   title: "Darul Abror Admin",
   description: "Admin panel untuk admin.darulabror.com",
   icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
+    icon: "/icon.png",
+    apple: "/icon.png",
   },
 };
 

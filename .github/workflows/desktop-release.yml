@@ -56,11 +56,19 @@ jobs:
 
       - name: Build desktop artifacts
         shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if [ "${{ runner.os }}" = "Linux" ]; then
-            npx electron-builder --linux --publish never
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            PUBLISH_FLAG="--publish always"
           else
-            npx electron-builder --win --publish never
+            PUBLISH_FLAG="--publish never"
+          fi
+
+          if [ "${{ runner.os }}" = "Linux" ]; then
+            npx electron-builder --linux $PUBLISH_FLAG
+          else
+            npx electron-builder --win $PUBLISH_FLAG
           fi
 
       - name: List release outputs
@@ -69,20 +77,6 @@ jobs:
           echo "Release dir contents:" 
           ls -la release || true
 
-      - name: Upload Linux installer to GitHub Release
-        if: runner.os == 'Linux'
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            release/*.AppImage
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Windows installer to GitHub Release
-        if: runner.os == 'Windows'
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            release/*.exe
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # NOTE: Publishing to GitHub Releases is handled by electron-builder itself.
+      # This is required for auto-update (electron-updater) because it uploads
+      # metadata files (latest*.yml and blockmaps) alongside installers.

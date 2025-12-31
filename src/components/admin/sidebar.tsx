@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/auth-context";
@@ -62,19 +61,19 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       {/* Header */}
       <div className="border-b border-[var(--da-sidebar-border)] bg-[var(--da-sidebar-header-bg)] px-6 py-6 backdrop-blur-xl">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--da-sidebar-brand-icon-bg)] backdrop-blur-sm">
-            <Image
-              src="/logo.png"
-              alt="Darul Abror"
-              width={28}
-              height={28}
-              className="h-7 w-7 rounded-md object-contain"
-              priority
-            />
-          </div>
           <div>
             <div className="text-base font-bold text-[var(--da-sidebar-header-text)]">Darul Abror</div>
-            <div className="text-xs text-[var(--da-sidebar-header-muted)]">Admin Panel</div>
+            <div className="flex items-center gap-1.5 text-xs text-[var(--da-sidebar-header-muted)]">
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 21h18M5 21V7a2 2 0 012-2h3v16m-5 0h14V9a2 2 0 00-2-2h-3m-4 14v-6m4 6v-8M7 9h.01M7 12h.01M7 15h.01"
+                />
+              </svg>
+              <span>Admin Panel</span>
+            </div>
           </div>
         </div>
         <div className="mt-4 rounded-lg bg-[var(--da-sidebar-role-bg)] px-3 py-2 backdrop-blur-sm">

@@ -53,6 +53,7 @@
     "@editorjs/list": "^2.0.9",
     "@editorjs/quote": "^2.7.6",
     "clsx": "^2.1.1",
+    "electron-updater": "^6.6.2",
     "next": "16.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",

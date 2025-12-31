@@ -14,7 +14,7 @@ async function copyFile(src, dest) {
 
 async function main() {
   const projectRoot = path.join(__dirname, "..");
-  const srcPng = path.join(projectRoot, "assets", "logo.png");
+  const srcPng = path.join(projectRoot, "assets", "icon.png");
   const outDir = path.join(projectRoot, "electron", "assets");
   const outPng = path.join(outDir, "icon.png");
   const outIco = path.join(outDir, "icon.ico");

@@ -1,6 +1,19 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, dialog } = require("electron");
 const path = require("path");
 const http = require("http");
+
+let autoUpdater = null;
+
+function getAutoUpdater() {
+  if (!app.isPackaged) return null;
+  if (autoUpdater) return autoUpdater;
+
+  // Lazy-load so dev mode doesn't require updater wiring.
+  // eslint-disable-next-line global-require
+  const { autoUpdater: au } = require("electron-updater");
+  autoUpdater = au;
+  return autoUpdater;
+}
 
 function isDev() {
   return process.env.NODE_ENV !== "production";
@@ -96,6 +109,66 @@ function createMainWindow({ port }) {
   return win;
 }
 
+function setupAutoUpdates(win) {
+  const au = getAutoUpdater();
+  if (!au) return;
+
+  au.autoDownload = false;
+  au.autoInstallOnAppQuit = true;
+
+  au.on("error", async (err) => {
+    // eslint-disable-next-line no-console
+    console.error("Auto update error", err);
+  });
+
+  au.on("update-available", async () => {
+    const { response } = await dialog.showMessageBox(win, {
+      type: "info",
+      buttons: ["Download", "Nanti"],
+      defaultId: 0,
+      cancelId: 1,
+      title: "Update tersedia",
+      message: "Versi terbaru tersedia. Download sekarang?",
+    });
+
+    if (response === 0) {
+      try {
+        await au.downloadUpdate();
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error("Failed to download update", err);
+      }
+    }
+  });
+
+  au.on("update-not-available", async () => {
+    // silent
+  });
+
+  au.on("update-downloaded", async () => {
+    const { response } = await dialog.showMessageBox(win, {
+      type: "question",
+      buttons: ["Restart sekarang", "Nanti"],
+      defaultId: 0,
+      cancelId: 1,
+      title: "Update siap",
+      message: "Update sudah selesai di-download. Restart untuk menerapkan?",
+    });
+
+    if (response === 0) {
+      au.quitAndInstall();
+    }
+  });
+
+  // Check after the window is ready to avoid dialogs before UI exists.
+  win.webContents.once("did-finish-load", () => {
+    au.checkForUpdates().catch((err) => {
+      // eslint-disable-next-line no-console
+      console.error("Failed to check updates", err);
+    });
+  });
+}
+
 let nextServer = null;
 
 async function boot() {
@@ -108,7 +181,8 @@ async function boot() {
   const port = await findAvailablePort();
   nextServer = await startNextServer({ port });
 
-  createMainWindow({ port: nextServer.port });
+  const win = createMainWindow({ port: nextServer.port });
+  setupAutoUpdates(win);
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0 && nextServer) {
