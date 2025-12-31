@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/auth-context";
@@ -62,14 +63,14 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       <div className="border-b border-[var(--da-sidebar-border)] bg-[var(--da-sidebar-header-bg)] px-6 py-6 backdrop-blur-xl">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--da-sidebar-brand-icon-bg)] backdrop-blur-sm">
-            <svg
-              className="h-6 w-6 text-[var(--da-sidebar-header-text)]"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-            </svg>
+            <Image
+              src="/logo.png"
+              alt="Darul Abror"
+              width={28}
+              height={28}
+              className="h-7 w-7 rounded-md object-contain"
+              priority
+            />
           </div>
           <div>
             <div className="text-base font-bold text-[var(--da-sidebar-header-text)]">Darul Abror</div>
