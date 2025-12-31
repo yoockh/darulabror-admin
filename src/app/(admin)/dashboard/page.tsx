@@ -27,9 +27,11 @@ function StatCard({
     <Link href={href} className="block">
       <Card className="hover:cursor-pointer">
         <CardHeader>
-          <CardTitle className="flex items-center justify-between gap-2">
-            <span>{title}</span>
-            <Badge variant={variant as any}>{context}</Badge>
+          <CardTitle className="flex flex-wrap items-center justify-between gap-2">
+            <span className="min-w-0 leading-tight">{title}</span>
+            <Badge className="shrink-0 whitespace-nowrap" variant={variant as any}>
+              {context}
+            </Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -180,7 +182,7 @@ export default function DashboardPage() {
           ) : (
             <div className="grid gap-4 lg:grid-cols-[1fr_360px]">
               <div>
-                <div className="grid gap-4 md:grid-cols-4">
+                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                   <StatCard
                     context="Registrations"
                     title={registrationStatusLabel("new")}
@@ -241,7 +243,7 @@ export default function DashboardPage() {
               <Skeleton className="h-28 w-full" />
             </div>
           ) : (
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               <StatCard
                 context="Contacts"
                 title={contactStatusLabel("new")}
