@@ -20,6 +20,13 @@
 # production
 /build
 
+# electron / desktop build outputs
+/release/
+/dist/
+
+# generated desktop icons (generated from assets/logo.png)
+/electron/assets/
+
 # misc
 .DS_Store
 *.pem

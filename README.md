@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Darul Abror Admin
 
-## Getting Started
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-First, run the development server:
+Admin panel untuk Darul Abror yang terhubung ke backend API dan bisa dijalankan sebagai aplikasi desktop (Electron) tanpa membuka browser.
+
+## Fitur
+
+- **Auth + RBAC**: role `admin` vs `superadmin`
+	- `superadmin` punya akses halaman **Manage Admins**
+	- Akses tanpa izin menampilkan **Akses Ditolak**
+- **Dashboard**, **Registrations**, **Contacts**: list/detail + update status
+- **Articles**: create/edit dengan Editor.js + multipart upload
+- **Theme toggle**: Dark (metal) / Light (siang)
+- **Same-origin proxy** untuk request API (mengurangi masalah CORS)
+- **Desktop mode**: Next server lokal + UI via Electron
+
+## Tech Stack
+
+- Next.js (App Router) + React + TypeScript
+- Tailwind CSS (tanpa MUI)
+- Editor.js (+ tools)
+- Sonner (toast)
+- Electron + electron-builder (desktop packaging)
+
+## Environment Variables
+
+Buat `.env.local` (untuk dev) atau set env sebelum build.
+
+Wajib:
+
+- `NEXT_PUBLIC_API_BASE_URL` — base URL backend API
+
+Opsional (override path endpoint jika backend berbeda):
+
+- `API_LOGIN_PATH`
+- `API_PROFILE_PATH`
+- `API_PROFILE_PASSWORD_PATH`
+- `API_REGISTRATIONS_PATH`
+- `API_REGISTRATION_STATUS_PATH`
+- `API_CONTACTS_PATH`
+- `API_CONTACT_STATUS_PATH`
+- `API_ARTICLES_PATH`
+- `API_ARTICLE_EDIT_PATH`
+- `API_ADMINS_PATH`
+- `API_ADMIN_EDIT_PATH`
+
+Contoh ada di `.env.example`.
+
+Catatan untuk desktop build: nilai `NEXT_PUBLIC_*` dibundle saat build — pastikan env sudah benar sebelum build installer.
+
+## Jalankan (Web)
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Buka `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Jalankan (Desktop / Electron)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm install
+npm run desktop:dev
+```
 
-## Learn More
+## Build Desktop Installer
 
-To learn more about Next.js, take a look at the following resources:
+Logo desktop diambil dari `assets/logo.png`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Linux (AppImage):
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run desktop:dist:linux
+```
 
-## Deploy on Vercel
+Windows (NSIS installer):
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run desktop:dist:win
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Output ada di folder `release/`.
+
+## Upload ke GitHub Releases
+
+Cara manual:
+
+1. Build installer sampai file keluar di `release/`.
+2. GitHub repo → **Releases** → **Draft a new release**.
+3. Isi tag versi (mis. `v0.1.0`) + release notes.
+4. Upload file installer (Linux: `.AppImage`, Windows: `.exe`).
+5. Publish, lalu share link `.../releases/latest` ke admin lain.
+
+## License
+
+MIT — lihat [LICENSE](LICENSE).

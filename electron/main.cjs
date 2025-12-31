@@ -62,6 +62,12 @@ async function startNextServer({ port }) {
 }
 
 function createMainWindow({ port }) {
+  const iconPath = path.join(
+    __dirname,
+    "assets",
+    process.platform === "win32" ? "icon.ico" : "icon.png",
+  );
+
   const win = new BrowserWindow({
     width: 1200,
     height: 800,
@@ -69,6 +75,7 @@ function createMainWindow({ port }) {
     minHeight: 700,
     backgroundColor: "#0d1117",
     show: false,
+    icon: iconPath,
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,

@@ -9,8 +9,9 @@
     "start": "next start",
     "lint": "eslint",
     "desktop:dev": "NODE_ENV=development electron electron/main.cjs",
-    "desktop:dist:linux": "NODE_ENV=production next build && electron-builder --linux",
-    "desktop:dist:win": "NODE_ENV=production next build && electron-builder --windows"
+    "desktop:icons": "node scripts/generate-icons.cjs",
+    "desktop:dist:linux": "npm run desktop:icons && NODE_ENV=production next build && electron-builder --linux",
+    "desktop:dist:win": "npm run desktop:icons && NODE_ENV=production next build && electron-builder --windows"
   },
   "build": {
     "appId": "com.darultech.darulabroradmin",
@@ -18,6 +19,11 @@
     "directories": {
       "output": "release"
     },
+    "publish": [
+      {
+        "provider": "github"
+      }
+    ],
     "files": [
       "electron/**/*",
       ".next/**/*",
@@ -27,11 +33,13 @@
       "node_modules/**/*"
     ],
     "win": {
+      "icon": "electron/assets/icon.ico",
       "target": [
         "nsis"
       ]
     },
     "linux": {
+      "icon": "electron/assets/icon.png",
       "target": [
         "AppImage"
       ]
@@ -62,6 +70,7 @@
     "tailwindcss": "^4",
     "typescript": "^5",
     "electron": "^33.0.0",
-    "electron-builder": "^25.1.8"
+    "electron-builder": "^25.1.8",
+    "png-to-ico": "^2.1.0"
   }
 }
