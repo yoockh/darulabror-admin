@@ -57,14 +57,26 @@ jobs:
       - name: Build Next.js
         run: npm run build
 
-      - name: Build & publish desktop artifacts
-        env:
-          # electron-builder reads GH_TOKEN for GitHub Releases publishing
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build desktop artifacts
         shell: bash
         run: |
           if [ "${{ runner.os }}" = "Linux" ]; then
-            npx electron-builder --linux --publish always
+            npx electron-builder --linux
           else
-            npx electron-builder --win --publish always
+            npx electron-builder --win
           fi
+
+      - name: List release outputs
+        shell: bash
+        run: |
+          echo "Release dir contents:" 
+          ls -la release || true
+
+      - name: Upload installers to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release/*.AppImage
+            release/*.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
