@@ -46,6 +46,112 @@ function defaultForm(): AdminFormState {
   };
 }
 
+function EyeIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function EyeOffIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M10.6 10.6a2 2 0 0 0 2.8 2.8"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M9.9 5.1A10.9 10.9 0 0 1 12 5c6.5 0 10 7 10 7a18.6 18.6 0 0 1-3.1 4.3"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M6.1 6.1A18.6 18.6 0 0 0 2 12s3.5 7 10 7c1.1 0 2.2-.2 3.1-.5"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M3 3l18 18"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function PasswordField({
+  label,
+  value,
+  onChange,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+}) {
+  const [show, setShow] = React.useState(false);
+  return (
+    <div className="space-y-1">
+      <label className="text-sm font-medium text-[var(--da-text-primary)]">{label}</label>
+      <div className="relative">
+        <Input
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          type={show ? "text" : "password"}
+          className="pr-10"
+        />
+        <button
+          type="button"
+          aria-label={show ? "Sembunyikan password" : "Lihat password"}
+          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1 text-[var(--da-text-secondary)] hover:text-[var(--da-text-primary)]"
+          onClick={() => setShow((v) => !v)}
+        >
+          {show ? <EyeOffIcon /> : <EyeIcon />}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function AdminsPage() {
   const { role, isReady } = useAuth();
 
@@ -215,7 +321,7 @@ export default function AdminsPage() {
       <Dialog open={createOpen} onOpenChange={setCreateOpen} title="Buat Admin">
         <div className="space-y-3">
           <div className="space-y-1">
-            <label className="text-sm font-medium">Username</label>
+            <label className="text-sm font-medium text-[var(--da-text-primary)]">Username</label>
             <Input
               value={form.username}
               onChange={(e) => setForm((s) => ({ ...s, username: e.target.value }))}
@@ -223,7 +329,7 @@ export default function AdminsPage() {
             />
           </div>
           <div className="space-y-1">
-            <label className="text-sm font-medium">Email</label>
+            <label className="text-sm font-medium text-[var(--da-text-primary)]">Email</label>
             <Input
               value={form.email}
               onChange={(e) => setForm((s) => ({ ...s, email: e.target.value }))}
@@ -233,7 +339,7 @@ export default function AdminsPage() {
           </div>
           <div className="grid gap-3 md:grid-cols-2">
             <div className="space-y-1">
-              <label className="text-sm font-medium">Role</label>
+              <label className="text-sm font-medium text-[var(--da-text-primary)]">Role</label>
               <Select
                 value={form.role}
                 onChange={(e) => setForm((s) => ({ ...s, role: e.target.value as Role }))}
@@ -243,7 +349,7 @@ export default function AdminsPage() {
               </Select>
             </div>
             <div className="space-y-1">
-              <label className="text-sm font-medium">Status</label>
+              <label className="text-sm font-medium text-[var(--da-text-primary)]">Status</label>
               <Select
                 value={form.is_active ? "active" : "inactive"}
                 onChange={(e) => setForm((s) => ({ ...s, is_active: e.target.value === "active" }))}
@@ -253,15 +359,12 @@ export default function AdminsPage() {
               </Select>
             </div>
           </div>
-          <div className="space-y-1">
-            <label className="text-sm font-medium">Password</label>
-            <Input
-              value={form.password}
-              onChange={(e) => setForm((s) => ({ ...s, password: e.target.value }))}
-              placeholder="password"
-              type="password"
-            />
-          </div>
+          <PasswordField
+            label="Password"
+            value={form.password}
+            onChange={(v) => setForm((s) => ({ ...s, password: v }))}
+            placeholder="password"
+          />
 
           <div className="flex gap-2 pt-2">
             <Button variant="outline" className="w-full" onClick={() => setCreateOpen(false)}>
@@ -304,7 +407,7 @@ export default function AdminsPage() {
       <Dialog open={editOpen} onOpenChange={setEditOpen} title="Edit Admin">
         <div className="space-y-3">
           <div className="space-y-1">
-            <label className="text-sm font-medium">Username</label>
+            <label className="text-sm font-medium text-[var(--da-text-primary)]">Username</label>
             <Input
               value={form.username}
               onChange={(e) => setForm((s) => ({ ...s, username: e.target.value }))}
@@ -312,7 +415,7 @@ export default function AdminsPage() {
             />
           </div>
           <div className="space-y-1">
-            <label className="text-sm font-medium">Email</label>
+            <label className="text-sm font-medium text-[var(--da-text-primary)]">Email</label>
             <Input
               value={form.email}
               onChange={(e) => setForm((s) => ({ ...s, email: e.target.value }))}
@@ -322,7 +425,7 @@ export default function AdminsPage() {
           </div>
           <div className="grid gap-3 md:grid-cols-2">
             <div className="space-y-1">
-              <label className="text-sm font-medium">Role</label>
+              <label className="text-sm font-medium text-[var(--da-text-primary)]">Role</label>
               <Select
                 value={form.role}
                 onChange={(e) => setForm((s) => ({ ...s, role: e.target.value as Role }))}
@@ -332,7 +435,7 @@ export default function AdminsPage() {
               </Select>
             </div>
             <div className="space-y-1">
-              <label className="text-sm font-medium">Status</label>
+              <label className="text-sm font-medium text-[var(--da-text-primary)]">Status</label>
               <Select
                 value={form.is_active ? "active" : "inactive"}
                 onChange={(e) => setForm((s) => ({ ...s, is_active: e.target.value === "active" }))}
@@ -342,15 +445,12 @@ export default function AdminsPage() {
               </Select>
             </div>
           </div>
-          <div className="space-y-1">
-            <label className="text-sm font-medium">Password (opsional)</label>
-            <Input
-              value={form.password}
-              onChange={(e) => setForm((s) => ({ ...s, password: e.target.value }))}
-              placeholder="(kosongkan jika tidak diubah)"
-              type="password"
-            />
-          </div>
+          <PasswordField
+            label="Password (opsional)"
+            value={form.password}
+            onChange={(v) => setForm((s) => ({ ...s, password: v }))}
+            placeholder="(kosongkan jika tidak diubah)"
+          />
 
           <div className="flex gap-2 pt-2">
             <Button variant="outline" className="w-full" onClick={() => setEditOpen(false)}>

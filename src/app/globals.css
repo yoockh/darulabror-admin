@@ -108,7 +108,7 @@ dialog::backdrop {
 .ce-inline-toolbar__dropdown:hover,
 .ce-inline-tool:hover,
 .ce-toolbox__button:hover {
-  background: rgba(229, 231, 235, 0.02) !important;
+  background: rgba(229, 231, 235, 0.015) !important;
   color: var(--da-text-primary) !important;
 }
 

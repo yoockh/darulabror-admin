@@ -113,7 +113,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       {/* Footer */}
       <div className="border-t border-white/10 bg-white/5 px-6 py-4 backdrop-blur-xl">
         <div className="text-xs text-white/50 text-center">
-          © 2024 Darul Abror
+          © 2025 Darul Abror
         </div>
       </div>
     </aside>
