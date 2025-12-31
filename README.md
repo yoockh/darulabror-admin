@@ -93,6 +93,19 @@ Cara manual:
 4. Upload file installer (Linux: `.AppImage`, Windows: `.exe`).
 5. Publish, lalu share link `.../releases/latest` ke admin lain.
 
+Cara otomatis (recommended untuk Windows):
+
+1. GitHub repo → **Settings** → **Variables and secrets** → **Actions** → **Variables**
+2. Tambah variable: `NEXT_PUBLIC_API_BASE_URL` (mis. `https://darulabror-717070183986.asia-southeast2.run.app`)
+3. Buat tag versi dan push:
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+Workflow GitHub Actions akan build **Windows (.exe NSIS)** + **Linux (.AppImage)** lalu upload otomatis ke **Releases**.
+
 ## License
 
 MIT — lihat [LICENSE](LICENSE).
