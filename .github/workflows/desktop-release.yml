@@ -58,9 +58,9 @@ jobs:
         shell: bash
         run: |
           if [ "${{ runner.os }}" = "Linux" ]; then
-            npx electron-builder --linux
+            npx electron-builder --linux --publish never
           else
-            npx electron-builder --win
+            npx electron-builder --win --publish never
           fi
 
       - name: List release outputs
